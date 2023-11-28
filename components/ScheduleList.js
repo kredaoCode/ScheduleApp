@@ -7,7 +7,7 @@ export default function SchuduleList({ schedule, activeDay }) {
     return (
         <View style={styles.container}>
             <View style={styles.schedule}>
-                {(day !== '') ?
+                {(schedule && schedule[activeDay]) ?
                     <FlatList
                         data={schedule[activeDay].schedule.filter(item => item !== null)}
                         renderItem={({ item }) => <ScheduleItem item={item} />}

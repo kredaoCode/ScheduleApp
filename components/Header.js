@@ -5,14 +5,19 @@ import React from 'react'
 import HeaderItem from './HeaderItem'
 import color from './Colors';
 
-export default function Header({ dates, activeDay }) {
+export default function Header({ dates, activeDay, setActiveDay }) {
     return (
         <View style={styles.container}>
             <FlatList
                 style={styles.list}
                 horizontal
                 data={dates}
-                renderItem={({ item }) => <HeaderItem item={item} activeDay={activeDay}/>}
+                renderItem={({ item }) => 
+                    <HeaderItem 
+                        item={item} 
+                        activeDay={activeDay} 
+                        setActiveDay={setActiveDay}
+                        />}
             />
             <Pressable style={styles.button}>
                 <Ionicons name="settings-outline" size={32} color={color.main} />

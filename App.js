@@ -20,41 +20,54 @@ export default function App() {
             fetch(`https://schedule-backend-production.koka.team/v1/schedule?group_id=${id}&is_new=true`)
                 .then(response => response.json())
                 .then(response => {
-                    setSchedule(JSON.parse(JSON.stringify(response.schedule)));
-                    if (typeof schedule === 'object' && schedule !== null && Object.keys(schedule).length > 0) {
+                    const parsedSchedule = JSON.parse(JSON.stringify(response.schedule));
+                    setSchedule(parsedSchedule);
+                    if (typeof parsedSchedule === 'object' && parsedSchedule !== null && Object.keys(parsedSchedule).length > 0) {
                         console.log('Данные успешно загружены');
+                        setActiveDay(Object.keys(parsedSchedule)[0])
                     } else {
                         console.log('Данные не загружены');
                     }
                 })
                 .catch(error => {
                     console.error('Произошла ошибка при загрузке данных:', error);
+                    setValidation(false);
                 });
         }
     }
 
-    function InHeader() { // обработка данных для хэдера
-        return Object.keys(schedule).map(key => {
-            return {
-                name: key,
-                date: schedule[key].date
-            }
-        });
+    function InHeader() {
+        if (schedule) {
+            return Object.keys(schedule).map(key => {
+                return {
+                    name: key,
+                    date: schedule[key].date
+                };
+            });
+        }
+        return [];
     }
 
-    useEffect(() => { // хук запускает функцию на старте
+    useEffect(() => {
         loadGroups(id);
-    }, []);
+    }, []); // Обновление данных при изменении id
 
+    useEffect(() => {
+        if (schedule && schedule[activeDay]) {
+            setValidation(true);
+        }
+    }, [schedule]); // Обновление данных при изменении schedule
 
     function app() {
         if (validation) {
-            return <>
-                <Header dates={InHeader()} activeDay={activeDay} />
-                <SchuduleList schedule={schedule} activeDay={activeDay} />
-            </>
+            return (
+                <>
+                    <Header dates={InHeader()} activeDay={activeDay} setActiveDay={setActiveDay} />
+                    <SchuduleList schedule={schedule} activeDay={activeDay} />
+                </>
+            );
         } else {
-            return <MessageError message={"нету расписания"} />
+            return <MessageError message={"нету расписания"} />;
         }
     }
 
@@ -67,6 +80,7 @@ export default function App() {
         </SafeAreaProvider>
     );
 }
+
 
 const styles = StyleSheet.create({
     container: {
