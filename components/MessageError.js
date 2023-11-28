@@ -9,7 +9,7 @@ export default function MessageError({ message }) {
             <ChangeGroup />
             <Text style={styles.warningText}>{message}</Text>
             <Pressable style={styles.button}>
-                <Text style={{color: color.main}}>Выбрать группу или преподователя</Text>
+                <Text style={{color: color.main}}>Выбрать группу или преподавателя</Text>
             </Pressable>
         </View>
     )

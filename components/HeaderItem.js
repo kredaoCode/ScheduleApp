@@ -1,16 +1,16 @@
 import { Pressable, StyleSheet, Text } from 'react-native'
+import color from './Colors'
 import React from 'react'
 
-import color from './Colors'
 
-export default function HeaderItem({ item, activeDay }) {
+export default function HeaderItem({ item, activeDay, setActiveDay }) {
 
     return (
         <Pressable style={() => [{
-                    borderColor: (activeDay === item) ? color.main : color.mainTransparent,
-                }, styles.container]} onPress={() => setDay(item)}>
+                    borderColor: (activeDay === item.name) ? color.main : color.mainTransparent,
+                }, styles.container]} onPress={() => setActiveDay(item.name)}>
             <Text style={{
-                color: (activeDay == item) ? color.main : color.mainTransparent,
+                color: (activeDay == item.name) ? color.main : color.mainTransparent,
             }}>{`${item.name}`}</Text>
         </Pressable>
     )
