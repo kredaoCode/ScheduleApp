@@ -2,23 +2,7 @@ import { FlatList, Modal, Pressable, StyleSheet, Text, TextInput, View } from 'r
 import React, { useState, useEffect, useMemo } from 'react'
 import color from './Colors'
 
-export default function ChangeGroup({ renderingModal, setRenderingModal, loadGroups }) {
-    const [change, setChange] = useState()
-
-    async function loadData() {
-        const groupsResponse = await fetch("https://schedule-backend-production.koka.team/v1/groups");
-        const groupsData = await groupsResponse.json();
-    
-        const combinedData = [
-            ...groupsData.groups,
-        ];
-    
-        setChange(combinedData);
-    }
-
-    useMemo(() => {
-        loadData();
-      }, []);
+export default function ChangeGroup({ renderingModal, setRenderingModal }) {
     
     return (
         <Modal
@@ -32,16 +16,6 @@ export default function ChangeGroup({ renderingModal, setRenderingModal, loadGro
                         style={styles.input}
                         placeholder='Введите группу или преподователя'
                         placeholderTextColor={color.mainTransparent}
-                    />
-                    <FlatList 
-                        style={styles.list}
-                        data={change}
-                        renderItem={({ item }) => <Pressable style={styles.buttonList} key={item.id} onPress={() => {
-                            loadGroups(item.id)
-                            setRenderingModal(0)
-                        }}>
-                            <Text style={{color: color.main}}>{item.name}</Text>
-                        </Pressable>}
                     />
                     <Pressable style={styles.button} onPress={() => setRenderingModal(0)}>
                         <Text style={{padding: 6}}>Назад</Text>

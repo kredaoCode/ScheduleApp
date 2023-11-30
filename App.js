@@ -6,14 +6,16 @@ import MessageError from './components/MessageError';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import Header from './components/Header'
+import ChangeGroup from './components/ChangeGroup';
 
 SplashScreen.preventAutoHideAsync();
 
 export default function App() {
     const [activeDay, setActiveDay] = useState();
     const [validation, setValidation] = useState(false);
+    const [renderingModal, setRenderingModal] = useState(0);
     const [schedule, setSchedule] = useState();
-    const [id, setId] = useState('238');
+    const [id, setId] = useState('236');
 
     function loadGroups(id) {
         if (id !== undefined) {
@@ -50,19 +52,21 @@ export default function App() {
 
     useEffect(() => {
         loadGroups(id);
-    }, []); // Обновление данных при изменении id
+    }, []); 
 
     useEffect(() => {
         if (schedule && schedule[activeDay]) {
             setValidation(true);
+            SplashScreen.hideAsync();
         }
-    }, [schedule]); // Обновление данных при изменении schedule
+    }, [schedule, activeDay]); // Обновление данных при изменении schedule
 
     function app() {
         if (validation) {
             return (
                 <>
-                    <Header dates={InHeader()} activeDay={activeDay} setActiveDay={setActiveDay} />
+                    <ChangeGroup renderingModal={renderingModal} setRenderingModal={setRenderingModal}/>
+                    <Header dates={InHeader()} activeDay={activeDay} setActiveDay={setActiveDay} setRenderingModal={setRenderingModal}/>
                     <SchuduleList schedule={schedule} activeDay={activeDay} />
                 </>
             );

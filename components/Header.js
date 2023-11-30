@@ -5,7 +5,7 @@ import React from 'react'
 import HeaderItem from './HeaderItem'
 import color from './Colors';
 
-export default function Header({ dates, activeDay, setActiveDay }) {
+export default function Header({ dates, activeDay, setActiveDay, setRenderingModal }) {
     return (
         <View style={styles.container}>
             <FlatList
@@ -19,7 +19,7 @@ export default function Header({ dates, activeDay, setActiveDay }) {
                         setActiveDay={setActiveDay}
                         />}
             />
-            <Pressable style={styles.button}>
+            <Pressable style={styles.button} onPress={() => setRenderingModal(1)}>
                 <Ionicons name="settings-outline" size={32} color={color.main} />
             </Pressable>
         </View>
