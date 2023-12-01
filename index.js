@@ -8,7 +8,7 @@ function loadGroups(id) {
                 data = JSON.parse(JSON.stringify(response.schedule));
                 if (typeof data === 'object' && data !== null && Object.keys(data).length > 0) {
                     console.log('Данные успешно загружены');
-                    console.log(data); // Вывод данных здесь, после загрузки
+                    console.log(data["02.12.2023"].schedule); // Вывод данных здесь, после загрузки
                 } else {
                     console.log('Данные не загружены');
                 }
@@ -19,4 +19,4 @@ function loadGroups(id) {
     }
 }
 
-loadGroups(238);
+loadGroups(236);
