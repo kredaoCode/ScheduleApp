@@ -9,8 +9,9 @@ export default function SchuduleList({ schedule, activeDay }) {
             <View style={styles.schedule}>
                 {(schedule && schedule[activeDay]) ?
                     <FlatList
+                        style={styles.list}
                         data={schedule[activeDay].schedule.filter(item => item !== null)}
-                        renderItem={({ item }) => <ScheduleItem item={item} />}
+                        renderItem={({ item }) => <ScheduleItem info={item} />}
                     /> : null}
             </View>
         </View>
@@ -20,5 +21,7 @@ export default function SchuduleList({ schedule, activeDay }) {
 const styles = StyleSheet.create({
     container: {
         padding: 15,
+    },
+    list: {
     },
 })
