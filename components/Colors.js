@@ -1,5 +1,5 @@
 let color = {
-    main: '#F1492B',
+    main: '#18A6FF',
     mainTransparent: '',
 };
 
