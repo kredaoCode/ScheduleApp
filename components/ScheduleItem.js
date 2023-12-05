@@ -18,7 +18,7 @@ export default function ScheduleItem({ info }) {
                     </View>
                     <Text style={styles.nameText}>{item.name}</Text>
                     <View style={styles.teacherContainer}>
-                        <Text style={styles.teacherText}>{item.teacher}</Text>
+                        <Text style={styles.teacherText}>{(item.teacher || item.group)}</Text>
                         {(item.location !== null) ?
                             <View style={styles.locationContainer}>
                                 <Text style={styles.locationText}>{item.location}</Text>
@@ -33,7 +33,7 @@ export default function ScheduleItem({ info }) {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#333333',
+        backgroundColor: color.bgNight,
         borderRadius: 14,
         padding: 10,
         marginBottom: 10,
@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
     },
     teacherContainer: {
-        backgroundColor: '#383838',
+        backgroundColor: color.bgLight,
         flexDirection: 'row',
         padding: 10,
         borderRadius: 10,
@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between'
     },
     locationContainer: {
-        backgroundColor: '#4B4B4B',
+        backgroundColor: color.bgLight,
         paddingVertical: 3,
         paddingHorizontal: 12,
         borderRadius: 5,
