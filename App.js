@@ -7,6 +7,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import Header from './components/Header'
 import ChangeGroup from './components/ChangeGroup';
+import color from './components/Colors';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -15,11 +16,14 @@ export default function App() {
     const [validation, setValidation] = useState(false);
     const [renderingModal, setRenderingModal] = useState(0);
     const [schedule, setSchedule] = useState();
-    const [id, setId] = useState('236');
+    const [id, setId] = useState({
+        id: 236,
+        type: 'group',
+    });
 
     function loadGroups(id) {
-        if (id !== undefined) {
-            fetch(`https://schedule-backend-production.koka.team/v1/schedule?group_id=${id}&is_new=true`)
+        if (id.id !== undefined) {
+            fetch(`https://schedule-backend-production.koka.team/v1/schedule?${id.type}_id=${id.id}&is_new=true`)
                 .then(response => response.json())
                 .then(response => {
                     const parsedSchedule = JSON.parse(JSON.stringify(response.schedule));
@@ -53,6 +57,9 @@ export default function App() {
     useEffect(() => {
         loadGroups(id);
     }, []); 
+    useEffect(() => {
+        loadGroups(id);
+    }, [id]); 
 
     useEffect(() => {
         if (schedule && schedule[activeDay]) {
@@ -65,7 +72,7 @@ export default function App() {
         if (validation) {
             return (
                 <>
-                    <ChangeGroup renderingModal={renderingModal} setRenderingModal={setRenderingModal}/>
+                    <ChangeGroup setId={setId} renderingModal={renderingModal} setRenderingModal={setRenderingModal}/>
                     <Header dates={InHeader()} activeDay={activeDay} setActiveDay={setActiveDay} setRenderingModal={setRenderingModal}/>
                     <SchuduleList schedule={schedule} activeDay={activeDay} />
                 </>
@@ -89,7 +96,7 @@ export default function App() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#272727',
+        backgroundColor: color.bg,
         paddingTop: 5,
     },
 });

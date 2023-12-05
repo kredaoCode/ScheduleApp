@@ -1,9 +1,30 @@
-import { FlatList, Modal, Pressable, StyleSheet, Text, TextInput, View } from 'react-native'
-import React, { useState, useEffect, useMemo } from 'react'
+import { FlatList, Modal, Pressable, StyleSheet, Text, View, TextInput } from 'react-native'
+import React, { useState } from 'react'
 import color from './Colors'
+import ChangeItem from './ChangeItem';
 
-export default function ChangeGroup({ renderingModal, setRenderingModal }) {
-    
+export default function ChangeGroup({ renderingModal, setRenderingModal, setId }) {
+    const [changeId, setChangeId] = useState();
+    const [input, setInput] = useState('');
+    const [type, setType] = useState('')
+
+    function loadGroup() {
+        fetch(`https://schedule-backend-production.koka.team/v1/groups`)
+            .then(response => response.json())
+            .then(response => {
+                setChangeId(response.groups);
+                setType('group')
+            })
+    }
+    function loadTeachers() {
+        fetch(`https://schedule-backend-production.koka.team/v1/teachers`)
+            .then(response => response.json())
+            .then(response => {
+                setChangeId(response.teachers);
+                setType('teacher');
+            })
+    }
+
     return (
         <Modal
             transparent={true}
@@ -12,13 +33,31 @@ export default function ChangeGroup({ renderingModal, setRenderingModal }) {
             <View style={styles.container}>
                 <View style={styles.modal}>
                     <Text style={styles.heading}>Настройки и кастомизация</Text>
-                    <TextInput
-                        style={styles.input}
-                        placeholder='Введите группу или преподователя'
-                        placeholderTextColor={color.mainTransparent}
-                    />
+                    <View style={styles.change}>
+                        <Pressable style={styles.changeButton} onPress={() => loadTeachers()}>
+                            <Text>Преподаватель</Text>
+                        </Pressable>
+                        <Pressable style={styles.changeButton} onPress={() => loadGroup()}>
+                            <Text>Группа</Text>
+                        </Pressable>
+                    </View>
+                    {(changeId !== undefined) ?
+                        <>
+                            <TextInput
+                                style={styles.input}
+                                placeholder='Введите группу или преподователя'
+                                placeholderTextColor={color.mainTransparent}
+                                value={input}
+                                onChangeText={setInput}
+                            />
+                            <FlatList
+                                style={styles.list}
+                                data={changeId.filter(item => item.name.includes(input))}
+                                renderItem={({ item }) => <ChangeItem name={item.name} id={item.id} setId={setId} type={type} />}
+                            />
+                        </> : <></>}
                     <Pressable style={styles.button} onPress={() => setRenderingModal(0)}>
-                        <Text style={{padding: 6}}>Назад</Text>
+                        <Text style={{ padding: 6 }}>Назад</Text>
                     </Pressable>
                 </View>
             </View>
@@ -31,20 +70,27 @@ const styles = StyleSheet.create({
         backgroundColor: '#0000009C',
         height: '100%',
     },
+    change: {
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'center'
+    },
+    changeButton: {
+        backgroundColor: color.mainTransparent,
+        padding: 15,
+        marginHorizontal: 5,
+        borderRadius: 15,
+        flex: 1,
+        alignItems: 'center',
+    },
     button: {
         backgroundColor: color.mainTransparent,
         borderRadius: 13,
         margin: 10,
     },
-    buttonList: {
-        margin: 5,
-        padding: 10,
-        backgroundColor: '#2B2A2A',
-        borderRadius: 10,
-        alignItems: 'center',
-    },
     modal: {
-        backgroundColor: '#272727',
+        backgroundColor: color.bg,
         padding: 10,
         margin: 10,
         borderRadius: 15,
@@ -56,7 +102,7 @@ const styles = StyleSheet.create({
     },
     input: {
         padding: 6,
-        marginVertical: 10,
+        margin: 10,
         borderWidth: 1,
         borderRadius: 13,
         borderColor: color.main,
@@ -64,5 +110,6 @@ const styles = StyleSheet.create({
     },
     list: {
         height: 150,
+        margin: 10,
     },
 })
