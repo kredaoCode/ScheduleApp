@@ -1,0 +1,32 @@
+import { FlatList, StyleSheet, View, Dimensions } from 'react-native'
+import React from 'react'
+import ScheduleItem from './ScheduleItem';
+import Header from './Header';
+
+export default function SchuduleList({ scheduleItem }) {
+
+    return (
+        <View style={styles.container}>
+            {(scheduleItem) ?
+                <>
+                    <Header date={scheduleItem.date} />
+                    <FlatList
+                        overScrollMode='never'
+                        showsVerticalScrollIndicator={false}
+                        data={scheduleItem.schedule.filter(item => item !== null)}
+                        keyExtractor={(item, index) => index.toString()}
+                        renderItem={({ item }) => <ScheduleItem info={item} />}
+                    />
+                </>
+                : null}
+        </View>
+    )
+}
+
+const styles = StyleSheet.create({
+    container: {
+        paddingHorizontal: 15,
+        marginBottom: 15,
+        width: Dimensions.get('window').width,
+    },
+})

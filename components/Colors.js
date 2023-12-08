@@ -2,7 +2,7 @@ let color = {
     bg: '#272727',
     bgNight: '#222222',
     bgLight: '#242424',
-    main: '#18A6FF',
+    main: '#18FFC5',
     mainTransparent: '',
 };
 

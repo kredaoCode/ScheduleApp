@@ -1,21 +1,17 @@
 import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
 import { StyleSheet } from 'react-native';
-import SchuduleList from './components/ScheduleList';
-import { useEffect, useState } from 'react';
-import MessageError from './components/MessageError';
+import { useMemo, useState } from 'react';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
-import Header from './components/Header'
-import ChangeGroup from './components/ChangeGroup';
 import color from './components/Colors';
+import ScheduleList from './components/ScheduleList';
+import NoSchedule from './components/NoSchedule';
 
 SplashScreen.preventAutoHideAsync();
 
 export default function App() {
-    const [activeDay, setActiveDay] = useState();
     const [validation, setValidation] = useState(false);
-    const [renderingModal, setRenderingModal] = useState(0);
-    const [schedule, setSchedule] = useState();
+    const [schedule, setSchedule] = useState({});
     const [id, setId] = useState({
         id: 236,
         type: 'group',
@@ -30,9 +26,11 @@ export default function App() {
                     setSchedule(parsedSchedule);
                     if (typeof parsedSchedule === 'object' && parsedSchedule !== null && Object.keys(parsedSchedule).length > 0) {
                         console.log('Данные успешно загружены');
-                        setActiveDay(Object.keys(parsedSchedule)[0])
+                        setValidation(true);
+                        SplashScreen.hideAsync();
                     } else {
-                        console.log('Данные не загружены');
+                        console.log(`Данные не загружены ${id.id} ${id.type}`);
+                        setValidation(false)
                     }
                 })
                 .catch(error => {
@@ -42,43 +40,21 @@ export default function App() {
         }
     }
 
-    function InHeader() {
-        if (schedule) {
-            return Object.keys(schedule).map(key => {
-                return {
-                    name: key,
-                    date: schedule[key].date
-                };
-            });
-        }
-        return [];
-    }
-
-    useEffect(() => {
+    useMemo(() => {
         loadGroups(id);
-    }, []); 
-    useEffect(() => {
-        loadGroups(id);
-    }, [id]); 
-
-    useEffect(() => {
-        if (schedule && schedule[activeDay]) {
-            setValidation(true);
-            SplashScreen.hideAsync();
-        }
-    }, [schedule, activeDay]); // Обновление данных при изменении schedule
+    }, []);
 
     function app() {
         if (validation) {
             return (
                 <>
-                    <ChangeGroup setId={setId} renderingModal={renderingModal} setRenderingModal={setRenderingModal}/>
-                    <Header dates={InHeader()} activeDay={activeDay} setActiveDay={setActiveDay} setRenderingModal={setRenderingModal}/>
-                    <SchuduleList schedule={schedule} activeDay={activeDay} />
+                    <ScheduleList schedule={schedule} setId={setId} />
                 </>
             );
         } else {
-            return <MessageError message={"нету расписания"} />;
+            return <>
+                <NoSchedule />
+            </>
         }
     }
 

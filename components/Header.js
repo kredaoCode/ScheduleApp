@@ -1,41 +1,33 @@
-import { FlatList, Pressable, StyleSheet, View } from 'react-native'
-import { Ionicons } from '@expo/vector-icons';
+import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
+import color from './Colors'
 
-import HeaderItem from './HeaderItem'
-import color from './Colors';
+export default function Header({ date }) {
 
-export default function Header({ dates, activeDay, setActiveDay, setRenderingModal }) {
+    function FormatedDate(date) {
+        let today = new Date(date * 1000);
+
+        const list = ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'];
+        const dayIndex = today.getDay();
+
+
+        return `${list[dayIndex]}, ${today.getDate()}.${today.getMonth()}.${today.getFullYear()}`
+    }
+
     return (
         <View style={styles.container}>
-            <FlatList
-                style={styles.list}
-                horizontal
-                data={dates}
-                renderItem={({ item }) => 
-                    <HeaderItem 
-                        item={item} 
-                        activeDay={activeDay} 
-                        setActiveDay={setActiveDay}
-                        />}
-            />
-            <Pressable style={styles.button} onPress={() => setRenderingModal(1)}>
-                <Ionicons name="settings-outline" size={32} color={color.main} />
-            </Pressable>
+            <Text style={{color: color.main}}>{FormatedDate(date)}</Text>
         </View>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
-        flexDirection: 'row',
+        display: 'flex',
         alignItems: 'center',
-    },
-    button: {
-        marginLeft: 4,
-        padding: 5,
-    },
-    list: {
-        paddingHorizontal: 10,
+        backgroundColor: color.bgNight,
+        borderRadius: 15,
+        padding: 15,
+        marginBottom: 10,
     },
 })
