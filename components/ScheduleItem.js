@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View } from 'react-native'
 import { Ionicons, SimpleLineIcons } from '@expo/vector-icons';
 import React from 'react'
-import color from './Colors'
+import colors from './Colors'
 
 export default function ScheduleItem({ info }) {
     return (
@@ -10,8 +10,8 @@ export default function ScheduleItem({ info }) {
                 <View style={{marginVertical: 5}} key={item.name}>
                     <View style={styles.header}>
                         {item.type == "Лекция" ?
-                            <Ionicons name="school" size={16} color={color.mainTransparent} /> :
-                            <SimpleLineIcons name="chemistry" size={16} color={color.mainTransparent}
+                            <Ionicons name="school" size={16} color={colors.color.mainTransparent} /> :
+                            <SimpleLineIcons name="chemistry" size={16} color={colors.color.mainTransparent}
                             />}
                         <Text style={styles.typeText}>{item.type}</Text>
                         <Text style={styles.textTransparent}>{item.time}</Text>
@@ -33,7 +33,7 @@ export default function ScheduleItem({ info }) {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: color.bgNight,
+        backgroundColor: colors.color.bgNight,
         borderRadius: 14,
         padding: 10,
         marginBottom: 10,
@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
     },
     teacherContainer: {
-        backgroundColor: color.bgLight,
+        backgroundColor: colors.color.bgLight,
         flexDirection: 'row',
         padding: 10,
         borderRadius: 10,
@@ -51,28 +51,28 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between'
     },
     locationContainer: {
-        backgroundColor: color.bgLight,
+        backgroundColor: colors.color.bgLight,
         paddingVertical: 3,
         paddingHorizontal: 12,
         borderRadius: 5,
     },
     teacherText: {
-        color: color.main,
+        color: colors.color.main,
         fontSize: 16,
     },
     locationText: {
-        color: color.main,
+        color: colors.color.main,
         fontSize: 16,
     },
     textTransparent: {
-        color: color.mainTransparent,
+        color: colors.color.mainTransparent,
     },
     typeText: {
-        color: color.mainTransparent,
+        color: colors.color.mainTransparent,
         marginHorizontal: 5,
     },
     nameText: {
-        color: color.main,
+        color: colors.color.main,
         fontSize: 16,
         marginVertical: 8,
     },

@@ -2,7 +2,7 @@ import { FlatList, StyleSheet, View } from 'react-native'
 import ScheduleDayList from './ScheduleDayList';
 import React from 'react'
 
-export default function ScheduleList({ schedule }) {
+export default function ScheduleList({ schedule, setSettings }) {
 
     return (
         <View>
@@ -13,7 +13,7 @@ export default function ScheduleList({ schedule }) {
                 showsHorizontalScrollIndicator={false}
                 data={Object.values(schedule)}
                 keyExtractor={(item , index) => index.toString()}
-                renderItem={({ item }) => <ScheduleDayList scheduleItem={item} />}
+                renderItem={({ item }) => <ScheduleDayList scheduleItem={item} setSettings={setSettings} />}
             />
         </View>
     )

@@ -1,12 +1,13 @@
 import { FlatList, Pressable, StyleSheet, Text, View, TextInput, Dimensions } from 'react-native'
 import React, { useState } from 'react'
-import color from './Colors'
+import colors from './Colors'
 import ChangeItem from './ChangeItem';
+import CircularHue from './CircularHue';
 
-export default function Settings({ setId }) {
+export default function Settings({ setId, setSettings }) {
     const [changeId, setChangeId] = useState();
     const [input, setInput] = useState('');
-    const [type, setType] = useState('')
+    const [type, setType] = useState('');
 
     function loadGroup() {
         fetch(`https://schedule-backend-production.koka.team/v1/groups`)
@@ -42,7 +43,7 @@ export default function Settings({ setId }) {
                         <TextInput
                             style={styles.input}
                             placeholder='Введите группу или преподователя'
-                            placeholderTextColor={color.mainTransparent}
+                            placeholderTextColor={colors.color.mainTransparent}
                             value={input}
                             onChangeText={setInput}
                         />
@@ -52,6 +53,7 @@ export default function Settings({ setId }) {
                             renderItem={({ item }) => <ChangeItem name={item.name} id={item.id} setId={setId} type={type} />}
                         />
                     </> : <></>}
+                <CircularHue setSettings={setSettings}/>
             </View>
         </View>
     )
@@ -62,7 +64,7 @@ const styles = StyleSheet.create({
         width: Dimensions.get('window').width,
     },
     item: {
-        backgroundColor: color.bgNight,
+        backgroundColor: colors.color.bgNight,
         borderRadius: 14,
         marginHorizontal: 15,
         padding: 15,
@@ -74,7 +76,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     changeButton: {
-        backgroundColor: color.mainTransparent,
+        backgroundColor: colors.color.mainTransparent,
         padding: 15,
         marginHorizontal: 5,
         borderRadius: 15,
@@ -82,22 +84,22 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     button: {
-        backgroundColor: color.mainTransparent,
+        backgroundColor: colors.color.mainTransparent,
         borderRadius: 13,
         margin: 10,
     },
     heading: {
         padding: 20,
         fontSize: 20,
-        color: color.main,
+        color: colors.color.main,
     },
     input: {
         padding: 6,
         margin: 10,
         borderWidth: 1,
         borderRadius: 13,
-        borderColor: color.main,
-        color: color.main,
+        borderColor: colors.color.main,
+        color: colors.color.main,
     },
     list: {
         height: 150,

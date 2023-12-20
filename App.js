@@ -3,14 +3,18 @@ import { StyleSheet } from 'react-native';
 import { useMemo, useState } from 'react';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
-import color from './components/Colors';
+import colors from './components/Colors.js';
 import ScheduleList from './components/ScheduleList';
 import NoSchedule from './components/NoSchedule';
+import Settings from './components/Settings';
+
 
 SplashScreen.preventAutoHideAsync();
 
 export default function App() {
+
     const [validation, setValidation] = useState(false);
+    const [settings, setSettings] = useState(false);
     const [schedule, setSchedule] = useState({});
     const [id, setId] = useState({
         id: 236,
@@ -42,18 +46,24 @@ export default function App() {
 
     useMemo(() => {
         loadGroups(id);
-    }, []);
+        setSettings(false)
+    }, [id]);
 
     function app() {
         if (validation) {
-            return (
-                <>
-                    <ScheduleList schedule={schedule} setId={setId} />
+            if (settings) {
+                return <>
+                    <Settings setId={setId} setSettings={setSettings}/>
                 </>
-            );
+            } else {
+                return <>
+                    <ScheduleList schedule={schedule} setId={setId} setSettings={setSettings} />
+                </>
+            }
         } else {
             return <>
                 <NoSchedule />
+                <Settings setId={setId} />
             </>
         }
     }
@@ -72,7 +82,7 @@ export default function App() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: color.bg,
+        backgroundColor: colors.color.bg,
         paddingTop: 5,
     },
 });

@@ -3,13 +3,14 @@ import React from 'react'
 import ScheduleItem from './ScheduleItem';
 import Header from './Header';
 
-export default function SchuduleList({ scheduleItem }) {
+export default function SchuduleList({ scheduleItem, setSettings }) {
 
     return (
         <View style={styles.container}>
             {(scheduleItem) ?
                 <>
-                    <Header date={scheduleItem.date} />
+                    <Header date={scheduleItem.date} setSettings={setSettings} />
+
                     <FlatList
                         overScrollMode='never'
                         showsVerticalScrollIndicator={false}
@@ -29,4 +30,7 @@ const styles = StyleSheet.create({
         marginBottom: 15,
         width: Dimensions.get('window').width,
     },
+    header: {
+
+    }
 })

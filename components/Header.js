@@ -1,8 +1,9 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { Pressable, StyleSheet, Text, View } from 'react-native'
+import { Ionicons } from '@expo/vector-icons';
 import React from 'react'
-import color from './Colors'
+import colors from './Colors'
 
-export default function Header({ date }) {
+export default function Header({ date, setSettings }) {
 
     function FormatedDate(date) {
         let today = new Date(date * 1000);
@@ -16,7 +17,10 @@ export default function Header({ date }) {
 
     return (
         <View style={styles.container}>
-            <Text style={{color: color.main}}>{FormatedDate(date)}</Text>
+            <Text style={{ color: colors.color.main}}>{FormatedDate(date)}</Text>
+            <Pressable onPress={() => setSettings(true)}>
+                <Ionicons name="ellipsis-vertical" size={24} color={colors.color.main} />
+            </Pressable>
         </View>
     )
 }
@@ -25,9 +29,11 @@ const styles = StyleSheet.create({
     container: {
         display: 'flex',
         alignItems: 'center',
-        backgroundColor: color.bgNight,
+        backgroundColor: colors.color.bgNight,
         borderRadius: 15,
         padding: 15,
         marginBottom: 10,
+        flexDirection: 'row',
+        justifyContent:'space-between',
     },
 })
