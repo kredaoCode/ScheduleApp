@@ -1,18 +1,18 @@
-import { Pressable, StyleSheet, Text } from 'react-native'
+import { TouchableOpacity, StyleSheet, Text } from 'react-native'
 import React from 'react'
-import colors from './Colors'
 
-export default function ChangeItem({ name, id, setId, type }) {
+export default function ChangeItem({ name, id, setId, type, color}) {
   return (
-      <Pressable style={styles.button} onPress={() => setId({id: id, type: type})}>
-      <Text style={{ color: colors.color.mainTransparent}}>{name}</Text>
-      </Pressable>
+    <TouchableOpacity style={[styles.button, {backgroundColor: color.bgLight}]} onPress={() => {
+        setId({id: id, type: type, name: name})
+      }}>
+          <Text style={{ color: color.main + 'A4', fontFamily: 'Raleway-Medium' }}>{name}</Text>
+    </TouchableOpacity>
   )
 }
 
 const styles = StyleSheet.create({
     button: {
-    backgroundColor: colors.color.bgLight,
         borderRadius: 12,
         padding: 8,
         margin: 2,

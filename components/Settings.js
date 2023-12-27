@@ -1,11 +1,12 @@
-import { FlatList, Pressable, StyleSheet, Text, View, TextInput, Dimensions } from 'react-native'
+import { FlatList, StyleSheet, Text, View, TextInput, Dimensions, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { AntDesign } from '@expo/vector-icons';
 import React, { useState } from 'react'
-import colors from './Colors'
 import ChangeItem from './ChangeItem';
 import CircularHue from './CircularHue';
 
-export default function Settings({ setId, setSettings }) {
+export default function Settings({ setId, setSettings, color, setColor }) {
     const [changeId, setChangeId] = useState();
+    const [loading, setLoading] = useState(false);
     const [input, setInput] = useState('');
     const [type, setType] = useState('');
 
@@ -14,7 +15,8 @@ export default function Settings({ setId, setSettings }) {
             .then(response => response.json())
             .then(response => {
                 setChangeId(response.groups);
-                setType('group')
+                setType('group');
+                setLoading(false);
             })
     }
     function loadTeachers() {
@@ -23,37 +25,50 @@ export default function Settings({ setId, setSettings }) {
             .then(response => {
                 setChangeId(response.teachers);
                 setType('teacher');
+                setLoading(false);
             })
     }
 
     return (
         <View style={styles.container}>
-            <View style={styles.item}>
-                <Text style={styles.heading}>Настройки и кастомизация</Text>
-                <View style={styles.change}>
-                    <Pressable style={styles.changeButton} onPress={() => loadTeachers()}>
-                        <Text>Преподаватель</Text>
-                    </Pressable>
-                    <Pressable style={styles.changeButton} onPress={() => loadGroup()}>
-                        <Text>Группа</Text>
-                    </Pressable>
+            <View style={[styles.item, {backgroundColor: color.bgNight}]}>
+                <View style={styles.heading}>
+                    <Text style={{ color: color.main, fontSize: 20, fontFamily: 'Raleway-Medium'}}>Настройки</Text>
+                    <TouchableOpacity onPress={() => setSettings(false)}>
+                        <AntDesign name="close" size={24} color={color.main} />
+                    </TouchableOpacity>
                 </View>
-                {(changeId !== undefined) ?
-                    <>
+                <View style={styles.change}>
+                    <TouchableOpacity style={[styles.changeButton, { backgroundColor: color.main }]} onPress={() => { 
+                        loadTeachers(); 
+                        setLoading(true); 
+                    }}>
+                        <Text style={{ fontFamily: 'Raleway-Medium', }}>Преподаватель</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={[styles.changeButton, { backgroundColor: color.main }]} onPress={() => {
+                        loadGroup();
+                        setLoading(true);
+                    }}>
+                        <Text style={{ fontFamily: 'Raleway-Medium', }}>Группа</Text>
+                    </TouchableOpacity>
+                </View>
+                {(!loading) ?
+                    (changeId !== undefined) ? <>
                         <TextInput
-                            style={styles.input}
-                            placeholder='Введите группу или преподователя'
-                            placeholderTextColor={colors.color.mainTransparent}
+                            style={[styles.input, {borderColor: color.main, color: color.main, fontFamily: 'Raleway-Regular'}]}
+                            placeholder={(type == 'group') ? 'Группа' : 'Преподаватель'}
+                            placeholderTextColor={color.main + '85'}
                             value={input}
                             onChangeText={setInput}
                         />
                         <FlatList
                             style={styles.list}
-                            data={changeId.filter(item => item.name.includes(input))}
-                            renderItem={({ item }) => <ChangeItem name={item.name} id={item.id} setId={setId} type={type} />}
+                            data={changeId.filter(item => item.name.toLowerCase().includes(input.toLowerCase()))}
+                            renderItem={({ item }) => <ChangeItem name={item.name} id={item.id} setId={setId} type={type} color={color} />}
                         />
-                    </> : <></>}
-                <CircularHue setSettings={setSettings}/>
+                    </> : <></>
+                     : <><ActivityIndicator style={{marginTop: 10}} size={'large'} color={color.main}/></>}
+                <CircularHue setSettings={setSettings} color={color} setColor={setColor}/>
             </View>
         </View>
     )
@@ -64,7 +79,6 @@ const styles = StyleSheet.create({
         width: Dimensions.get('window').width,
     },
     item: {
-        backgroundColor: colors.color.bgNight,
         borderRadius: 14,
         marginHorizontal: 15,
         padding: 15,
@@ -76,30 +90,25 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     changeButton: {
-        backgroundColor: colors.color.mainTransparent,
         padding: 15,
         marginHorizontal: 5,
         borderRadius: 15,
         flex: 1,
         alignItems: 'center',
     },
-    button: {
-        backgroundColor: colors.color.mainTransparent,
-        borderRadius: 13,
-        margin: 10,
-    },
     heading: {
-        padding: 20,
-        fontSize: 20,
-        color: colors.color.main,
+        paddingVertical: 20,
+        paddingHorizontal: 15,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
     },
     input: {
-        padding: 6,
+        paddingHorizontal: 12,
+        paddingVertical: 6,
         margin: 10,
         borderWidth: 1,
         borderRadius: 13,
-        borderColor: colors.color.main,
-        color: colors.color.main,
     },
     list: {
         height: 150,

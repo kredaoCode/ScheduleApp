@@ -1,9 +1,8 @@
-import { Pressable, StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, TouchableOpacity } from 'react-native'
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react'
-import colors from './Colors'
 
-export default function Header({ date, setSettings }) {
+export default function Header({ date, setSettings, color, id }) {
 
     function FormatedDate(date) {
         let today = new Date(date * 1000);
@@ -16,12 +15,10 @@ export default function Header({ date, setSettings }) {
     }
 
     return (
-        <View style={styles.container}>
-            <Text style={{ color: colors.color.main}}>{FormatedDate(date)}</Text>
-            <Pressable onPress={() => setSettings(true)}>
-                <Ionicons name="ellipsis-vertical" size={24} color={colors.color.main} />
-            </Pressable>
-        </View>
+        <TouchableOpacity style={[styles.container, { backgroundColor: color.bgNight }]} onPress={() => setSettings(true)}>
+            <Text style={{ color: color.main, fontFamily: 'Raleway-Medium' }}>{id.name}, {FormatedDate(date)}</Text>
+                <Ionicons name="ellipsis-vertical" size={24} color={color.main} />
+        </TouchableOpacity>
     )
 }
 
@@ -29,7 +26,6 @@ const styles = StyleSheet.create({
     container: {
         display: 'flex',
         alignItems: 'center',
-        backgroundColor: colors.color.bgNight,
         borderRadius: 15,
         padding: 15,
         marginBottom: 10,

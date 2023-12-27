@@ -3,20 +3,20 @@ import React from 'react'
 import ScheduleItem from './ScheduleItem';
 import Header from './Header';
 
-export default function SchuduleList({ scheduleItem, setSettings }) {
+export default function SchuduleList({ scheduleItem, setSettings, color, id }) {
 
     return (
         <View style={styles.container}>
             {(scheduleItem) ?
                 <>
-                    <Header date={scheduleItem.date} setSettings={setSettings} />
+                    <Header id={id} date={scheduleItem.date} setSettings={setSettings} color={color} />
 
                     <FlatList
                         overScrollMode='never'
                         showsVerticalScrollIndicator={false}
                         data={scheduleItem.schedule.filter(item => item !== null)}
                         keyExtractor={(item, index) => index.toString()}
-                        renderItem={({ item }) => <ScheduleItem info={item} />}
+                        renderItem={({ item }) => <ScheduleItem info={item} color={color} />}
                     />
                 </>
                 : null}

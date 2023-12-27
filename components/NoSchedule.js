@@ -1,12 +1,16 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { Pressable, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
-import colors from './Colors'
 
-export default function NoSchedule() {
+export default function NoSchedule({ color, setSettings }) {
   return (
-    <View style={styles.container}>
-      <Text style={{ textAlign: 'center', color: colors.color.bg, fontSize: 16 }}>Расписание отсутствует :(</Text>
-    </View>
+    <>
+      <View style={[styles.container]}>
+        <Text style={{ textAlign: 'center', color: color.main, fontSize: 16, fontFamily: 'Raleway-Medium' }}>Расписание отсутствует :(</Text>
+      </View>
+      <Pressable style={[styles.container, { backgroundColor: color.bgLight }]} onPress={() => setSettings(true)}>
+        <Text style={{color: color.main, fontFamily: 'Raleway-Regular', textAlign: 'center'}}>Открыть настройки</Text>
+      </Pressable>
+    </>
   )
 }
 
@@ -16,7 +20,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     borderRadius: 12,
     marginHorizontal: 15,
+    marginTop: 10,
     justifyContent: 'center',
-    backgroundColor: colors.color.main,
-  }
+  },
 })
