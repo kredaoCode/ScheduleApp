@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
         borderRadius: 14,
         padding: 10,
         marginBottom: 10,
-        flex: 1,
+        marginHorizontal: 10,
     },
     header: {
         flexDirection: 'row',
@@ -43,9 +43,10 @@ const styles = StyleSheet.create({
     teacherContainer: {
         flexDirection: 'row',
         padding: 10,
-        borderRadius: 10,
+        borderRadius: 15,
         alignItems: 'center',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        elevation: 5,
     },
     locationContainer: {
         paddingVertical: 3,

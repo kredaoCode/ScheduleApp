@@ -26,7 +26,6 @@ export default function SchuduleList({ scheduleItem, setSettings, color, id }) {
 
 const styles = StyleSheet.create({
     container: {
-        paddingHorizontal: 15,
         marginBottom: 15,
         width: Dimensions.get('window').width,
     },

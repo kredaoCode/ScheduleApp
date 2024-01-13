@@ -20,11 +20,12 @@ export default function Example({ setSettings, color, setColor}) {
 
     return (
         <View>
-            <TouchableOpacity style={[styles.openButton, {backgroundColor: color.main}]} onPress={() => setShowModal(true)}>
+            <TouchableOpacity style={styles.openButton} onPress={() => setShowModal(true)}>
                 <Text
-                    style={{ color: '#000', textAlign: 'center', fontFamily: 'Raleway-Medium'}}>
+                    style={{ color: color.main, textAlign: 'center', fontFamily: 'Raleway-Medium'}}>
                     Выбрать цвет
                 </Text>
+                <View style={{backgroundColor: color.main, width: '20%', height: '100%'}}></View>
             </TouchableOpacity>
 
             <Modal
@@ -49,7 +50,9 @@ export default function Example({ setSettings, color, setColor}) {
                         <TouchableOpacity
                             style={[styles.closeButton, { backgroundColor: color.bgLight, borderColor: color.main}]}
                             onPress={async () => {
-                                await setColor({ ...color, main: selectedColor.value })
+                                setColor(prev => {
+                                    return {...prev, main: selectedColor.value}
+                                })
                                 setShowModal(false);
                                 setSettings(false);
                             }}>
@@ -83,21 +86,12 @@ const styles = StyleSheet.create({
         borderRadius: 16,
     },
     openButton: {
-        borderRadius: 20,
         padding: 15,
         marginHorizontal: 5,
         marginVertical: 10,
-        borderRadius: 15,
-
-        shadowColor: '#000',
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-
-        elevation: 5,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
     },
     closeButton: {
         padding: 15,

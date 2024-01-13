@@ -9,16 +9,16 @@ export default function Header({ date, setSettings, color, id }) {
 
         const list = ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'];
         const dayIndex = today.getDay();
+        const month = (today.getMonth() > 9) ? today.getMonth() + 1 : `0${today.getMonth() + 1}`
 
-
-        return `${list[dayIndex]}, ${today.getDate()}.${today.getMonth()}.${today.getFullYear()}`
+        return `${list[dayIndex]}, ${today.getDate()}.${month}.${today.getFullYear()}`
     }
 
     return (
-        <TouchableOpacity style={[styles.container, { backgroundColor: color.bgNight }]} onPress={() => setSettings(true)}>
-            <Text style={{ color: color.main, fontFamily: 'Raleway-Medium' }}>{id.name}, {FormatedDate(date)}</Text>
+            <TouchableOpacity style={[styles.container, { backgroundColor: color.bgNight }]} onPress={() => setSettings(true)}>
+                <Text style={{ color: color.main, fontFamily: 'Raleway-Medium' }}>{id.name}, {FormatedDate(date)}</Text>
                 <Ionicons name="ellipsis-vertical" size={24} color={color.main} />
-        </TouchableOpacity>
+            </TouchableOpacity>
     )
 }
 
@@ -28,8 +28,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderRadius: 15,
         padding: 15,
+        marginHorizontal: 10,
         marginBottom: 10,
         flexDirection: 'row',
-        justifyContent:'space-between',
+        justifyContent: 'space-between',
     },
 })
