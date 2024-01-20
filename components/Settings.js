@@ -26,6 +26,9 @@ export default function Settings({
             style={styles.container}
             animationType="fade"
             visible={settings}
+            onRequestClose={() => {
+                setSettings(prev => !prev)
+            }}
             >
             <View style={[styles.item, {backgroundColor: color.bg}]}>
                 <ChangeFilter setId={setId} setSettings={setSettings} color={color}/>

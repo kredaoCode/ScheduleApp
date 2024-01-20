@@ -62,7 +62,8 @@ export default function App() {
             fetch(`https://schedule-backend-production.koka.team/v1/schedule?${id.type}_id=${id.id}&is_new=true`)
                 .then(response => response.json())
                 .then(response => {
-                    const parsedSchedule = JSON.parse(JSON.stringify(response.schedule));
+                    const parsedSchedule = {}
+                    Object.assign(parsedSchedule, response.schedule)
                     setSchedule(parsedSchedule);
                     if (Object.keys(parsedSchedule).length > 0) {
                         setValidation(true);
@@ -87,7 +88,6 @@ export default function App() {
 
     
     useMemo(() => {
-        console.log('theme')
         if (isEnabledTheme == true) {
             setColor(prev => {
                 return {
@@ -114,6 +114,10 @@ export default function App() {
             saveData();
         }
     }, [id, color, isEnabledTheme])
+
+    useEffect(() => {
+        loadData();
+    }, [id])
 
     const [fontsLoaded, fontError] = useFonts({
         'Raleway-Regular': require('./assets/fonts/Raleway-Regular.ttf'),

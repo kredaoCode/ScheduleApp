@@ -71,7 +71,14 @@ export default function ChangeFilter({ setId, setSettings, color }) {
                     <FlatList
                         style={styles.list}
                         data={changeId.filter(item => item.name.toLowerCase().includes(input.toLowerCase()))}
-                        renderItem={({ item }) => <ChangeItem name={item.name} id={item.id} setId={setId} type={type} color={color} />}
+                        renderItem={({ item }) => <ChangeItem 
+                            name={item.name} 
+                            id={item.id} 
+                            setId={setId}
+                            type={type}
+                            color={color}
+                            setSettings={setSettings}
+                        />}
                     />
                 </> : <></>
                 : <><ActivityIndicator style={{ marginTop: 10 }} size={'large'} color={color.main} /></>}
