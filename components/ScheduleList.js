@@ -22,6 +22,8 @@ export default function ScheduleList({ schedule, setSettings, color, id, refresh
                     <RefreshControl
                         refreshing={refreshing}
                         onRefresh={onRefresh}
+                        colors={[color.main, color.bg]}
+                        progressBackgroundColor={color.bg}
                     />}
             />
         </View>

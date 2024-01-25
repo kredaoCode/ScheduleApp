@@ -65,6 +65,7 @@ export default function App() {
                     const parsedSchedule = {}
                     Object.assign(parsedSchedule, response.schedule)
                     setSchedule(parsedSchedule);
+                    SplashScreen.hideAsync()
                     if (Object.keys(parsedSchedule).length > 0) {
                         setValidation(true);
                         setRefreshing(false)
@@ -77,6 +78,7 @@ export default function App() {
                 .catch(error => {
                     console.error('Произошла ошибка при загрузке данных:', error);
                     setValidation(false);
+                    setRefreshing(false)
                 });
         }
     }
