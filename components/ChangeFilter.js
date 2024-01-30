@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
         borderRadius: 13,
     },
     list: {
-        height: 150,
+        height: 300,
         margin: 10,
     },
 })

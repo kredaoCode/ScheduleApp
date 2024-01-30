@@ -1,23 +1,26 @@
 import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFonts } from 'expo-font';
-import { StyleSheet } from 'react-native';
-import { useState, useCallback, useMemo, useEffect } from 'react';
+import { ActivityIndicator, Text, StyleSheet, View, useColorScheme } from 'react-native';
+import { useState, useMemo, useEffect } from 'react';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import ScheduleList from './components/ScheduleList';
-import NoSchedule from './components/NoSchedule';
 import Settings from './components/Settings';
 
 
 SplashScreen.preventAutoHideAsync();
 
 export default function App() {
+    const colorTheme = useColorScheme();
+
+    const [responseStatus, setResponseStatus] = useState(true);
+
     const [color, setColor] = useState({
-        bg: '#FAFAFAC9',
-        bgNight: '#EBEBEBA4',
-        bgLight: '#FAFAFA',
-        main: '#181818',
+        bg: '#1B1B1B',
+        bgNight: '#222222',
+        bgLight: '#272727',
+        main: '#235BEA',
     });
     const [validation, setValidation] = useState(false);
     const [settings, setSettings] = useState(false);
@@ -29,22 +32,19 @@ export default function App() {
     });
 
     const [refreshing, setRefreshing] = useState(false);
-    const [isEnabledTheme, setIsEnabledTheme] = useState(false);
 
     const onRefresh = () => {
         setRefreshing(true);
-        loadData();
+        loadShedule();
     };
 
     const saveData = async () => {
         await AsyncStorage.setItem('id', JSON.stringify(id));
         await AsyncStorage.setItem('color', JSON.stringify(color));
-        await AsyncStorage.setItem('theme', JSON.stringify(isEnabledTheme));
     };
     const getData = async () => {
         const getId = await AsyncStorage.getItem('id');
         const getColor = await AsyncStorage.getItem('color');
-        const getTheme = await AsyncStorage.getItem('theme');
 
         if (getId !== null) {
             setId(JSON.parse(getId))
@@ -52,25 +52,23 @@ export default function App() {
         if (getColor !== null) {
             setColor(JSON.parse(getColor))
         }
-        if (getTheme !== null) {
-            setIsEnabledTheme(JSON.parse(getTheme))
-        }
     };
 
-    const loadData = () => {
+    const loadShedule = () => {
         if (id !== undefined && color !== undefined) {
             fetch(`https://schedule-backend-production.koka.team/v1/schedule?${id.type}_id=${id.id}&is_new=true`)
-                .then(response => response.json())
+                .then(response => {
+                    setResponseStatus(response.ok)
+                    return response.json();
+                })
                 .then(response => {
                     const parsedSchedule = {}
                     Object.assign(parsedSchedule, response.schedule)
                     setSchedule(parsedSchedule);
-                    SplashScreen.hideAsync()
                     if (Object.keys(parsedSchedule).length > 0) {
                         setValidation(true);
                         setRefreshing(false)
                     } else {
-                        console.log(`Данные не загружены ${id.id} ${id.type}`);
                         setValidation(false)
                         setRefreshing(false)
                     }
@@ -80,17 +78,25 @@ export default function App() {
                     setValidation(false);
                     setRefreshing(false)
                 });
+        } else {
+            setRefreshing(false)
         }
     }
 
+
+
     useEffect(() => {
-        loadData();
+        loadShedule()
         getData();
+        SplashScreen.hideAsync();
     }, []);
 
-    
-    useMemo(() => {
-        if (isEnabledTheme == true) {
+    useEffect(() => {
+        saveData();
+    }, [id, color])
+
+    useEffect(() => {
+        if (colorTheme == 'light') {
             setColor(prev => {
                 return {
                     bg: '#D3D3D3',
@@ -109,57 +115,32 @@ export default function App() {
                 }
             })
         }
-    }, [isEnabledTheme])
-
-    useEffect(() => {
-        if (validation) {
-            saveData();
-        }
-    }, [id, color, isEnabledTheme])
-
-    useEffect(() => {
-        loadData();
-    }, [id])
+    }, [colorTheme])
 
     const [fontsLoaded, fontError] = useFonts({
         'Raleway-Regular': require('./assets/fonts/Raleway-Regular.ttf'),
         'Raleway-Medium': require('./assets/fonts/Raleway-Medium.ttf'),
     });
-    const onLayoutRootView = useCallback(async () => {
-        if (fontsLoaded || fontError) {
-            await SplashScreen.hideAsync();
-        }
-    }, [fontsLoaded, fontError]);
-
-    if (!fontsLoaded && !fontError) {
-        return null;
-    }
 
     function app() {
-        if (color && color.bg !== undefined) {
-            if (validation) {
-                return <>
-                    <ScheduleList
-                        schedule={schedule}
-                        id={id}
-                        setSettings={setSettings}
-                        color={color}
-                        refreshing={refreshing}
-                        onRefresh={onRefresh}
-
-                    />
-                </>
-            } else {
-                return <>
-                    <NoSchedule
-                        color={color}
-                        setSettings={setSettings}
-                        refreshing={refreshing}
-                        onRefresh={onRefresh} />
-                </>
-            }
+        if (color && color.bg !== undefined && validation) {
+            return <View style={{ height: '100%' }}>
+                <ScheduleList
+                    schedule={schedule}
+                    id={id}
+                    setSettings={setSettings}
+                    color={color}
+                    refreshing={refreshing}
+                    onRefresh={onRefresh}
+                />
+            </View>
         } else {
-            console.log("пиздец")
+            return <View style={{ alignSelf: 'center' }}>
+                {(responseStatus) ? 
+                    <ActivityIndicator style={{ marginTop: 10 }} size={'large'} color={color.main} />
+                    : 
+                    <Text style={{ color: color.main, fontFamily: 'Raleway-Medium', fontSize: 18 }}>Нет подключения 😴</Text>}
+            </View>
         }
     }
 
@@ -167,7 +148,6 @@ export default function App() {
         <SafeAreaProvider>
             <SafeAreaView style={[styles.container, { backgroundColor: color.bg }]}
                 edges={['bottom', 'top', 'left', 'right']}
-                onLayout={onLayoutRootView}
             >
                 {app()}
                 <Settings
@@ -176,8 +156,6 @@ export default function App() {
                     setSettings={setSettings}
                     color={color}
                     setColor={setColor}
-                    isEnabledTheme={isEnabledTheme}
-                    setIsEnabledTheme={setIsEnabledTheme}
                 />
                 <StatusBar style="light" />
             </SafeAreaView>
@@ -190,5 +168,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         paddingTop: 5,
+        justifyContent: 'center',
     },
 });

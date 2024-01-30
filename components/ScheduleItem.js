@@ -1,10 +1,21 @@
 import { StyleSheet, Text, View } from 'react-native'
 import { Ionicons, SimpleLineIcons } from '@expo/vector-icons';
-import React from 'react'
+import React, { useEffect } from 'react'
+import Animated, {useSharedValue, withSpring, withTiming} from 'react-native-reanimated';
 
-export default function ScheduleItem({ info, color }) {
+export default function ScheduleItem({ index, info, color }) {
+    const opacity = useSharedValue(0);
+
+    useEffect(() => {
+        setTimeout(() => {
+            opacity.value = withTiming(1, {
+                duration: 300,
+            });
+        }, (index + 1) * 250)
+    }, [])
+
     return (
-        <View style={[styles.container, {backgroundColor: color.bgNight}]}>
+        <Animated.View style={[styles.container, {backgroundColor: color.bgNight, opacity}]}>
             {info.map(item =>
                 <View style={{marginVertical: 5}} key={item.name}>
                     <View style={styles.header}>
@@ -26,7 +37,7 @@ export default function ScheduleItem({ info, color }) {
                     </View>
                 </View>
             )}
-        </View>
+        </Animated.View>
     )
 }
 
@@ -46,7 +57,6 @@ const styles = StyleSheet.create({
         borderRadius: 15,
         alignItems: 'center',
         justifyContent: 'space-between',
-        elevation: 5,
     },
     locationContainer: {
         paddingVertical: 3,

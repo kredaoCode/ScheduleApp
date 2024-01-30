@@ -16,8 +16,6 @@ export default function Settings({
     settings,
     color,
     setColor,
-    isEnabledTheme,
-    setIsEnabledTheme,
 }) {
     
 
@@ -33,7 +31,6 @@ export default function Settings({
             <View style={[styles.item, {backgroundColor: color.bg}]}>
                 <ChangeFilter setId={setId} setSettings={setSettings} color={color}/>
                 <CircularHue setSettings={setSettings} color={color} setColor={setColor}/>
-                <ChangeThemes color={color} isEnabledTheme={isEnabledTheme} setIsEnabledTheme={setIsEnabledTheme}/>
             </View>
         </Modal>
     )

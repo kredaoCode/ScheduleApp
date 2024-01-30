@@ -16,7 +16,7 @@ export default function SchuduleList({ scheduleItem, setSettings, color, id }) {
                         showsVerticalScrollIndicator={false}
                         data={scheduleItem.schedule.filter(item => item !== null)}
                         keyExtractor={(item, index) => index.toString()}
-                        renderItem={({ item }) => <ScheduleItem info={item} color={color} />}
+                        renderItem={({ item, index }) => <ScheduleItem index={index} info={item} color={color} />}
                     />
                 </>
                 : null}
