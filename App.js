@@ -7,12 +7,31 @@ import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import ScheduleList from './components/ScheduleList';
 import Settings from './components/Settings';
+import * as Updates from 'expo-updates';
 
 
 SplashScreen.preventAutoHideAsync();
 
 export default function App() {
+    async function onFetchUpdateAsync() {
+        try {
+          const update = await Updates.checkForUpdateAsync();
+    
+          if (update.isAvailable) {
+            await Updates.fetchUpdateAsync();
+            await Updates.reloadAsync();
+          }
+        } catch (error) {
+          alert(`Ошибка обновления: ${error}`);
+        }
+    }
+
+    useEffect(() => {
+        onFetchUpdateAsync()
+    })
+
     const colorTheme = useColorScheme();
+    const [offline_status, setOffline_status] = useState(false)
 
     const [responseStatus, setResponseStatus] = useState(true);
 
@@ -38,9 +57,17 @@ export default function App() {
         loadShedule();
     };
 
-    const saveData = async () => {
-        await AsyncStorage.setItem('id', JSON.stringify(id));
-        await AsyncStorage.setItem('color', JSON.stringify(color));
+    const saveData = async (type) => {
+        if (type == 'id_color') {
+            await AsyncStorage.setItem('id', JSON.stringify(id));
+            await AsyncStorage.setItem('color', JSON.stringify(color));
+        } else if (type == 'schedule') {
+            await AsyncStorage.setItem('schedule', JSON.stringify(schedule));
+        } else if (type == 'all') {
+            await AsyncStorage.setItem('id', JSON.stringify(id));
+            await AsyncStorage.setItem('color', JSON.stringify(color));
+        }
+        
     };
     const getData = async () => {
         const getId = await AsyncStorage.getItem('id');
@@ -53,6 +80,15 @@ export default function App() {
             setColor(JSON.parse(getColor))
         }
     };
+    const getSchedule = async () => {
+        const getSchedule = await AsyncStorage.getItem('schedule');
+
+        if (getSchedule !== null) {
+            setSchedule(JSON.parse(getSchedule))
+            setOffline_status(true)
+        }
+    };
+
 
     const loadShedule = () => {
         if (id !== undefined && color !== undefined) {
@@ -62,15 +98,22 @@ export default function App() {
                     return response.json();
                 })
                 .then(response => {
-                    const parsedSchedule = {}
-                    Object.assign(parsedSchedule, response.schedule)
-                    setSchedule(parsedSchedule);
-                    if (Object.keys(parsedSchedule).length > 0) {
-                        setValidation(true);
-                        setRefreshing(false)
+                    if (responseStatus) {
+                        const parsedSchedule = {}
+                        Object.assign(parsedSchedule, response.schedule)
+                        setSchedule(parsedSchedule);
+                        if (Object.keys(parsedSchedule).length > 0) {
+                            saveData('schedule')
+                            setValidation(true);
+                            setRefreshing(false)
+                            setOffline_status(false)
+                        } else {
+                            setValidation(false)
+                            setRefreshing(false)
+                        }
                     } else {
-                        setValidation(false)
-                        setRefreshing(false)
+                        getSchedule();
+
                     }
                 })
                 .catch(error => {
@@ -87,21 +130,21 @@ export default function App() {
 
     useEffect(() => {
         loadShedule()
-        getData();
+        //getData();
         SplashScreen.hideAsync();
     }, []);
 
     useEffect(() => {
-        saveData();
+        saveData('id_color');
     }, [id, color])
 
     useEffect(() => {
         if (colorTheme == 'light') {
             setColor(prev => {
                 return {
-                    bg: '#D3D3D3',
-                    bgNight: '#CECECE',
-                    bgLight: '#E4E4E4',
+                    bg: '#D2D2D2',
+                    bgNight: '#E2E2E2',
+                    bgLight: '#ECECEC',
                     main: prev.main,
                 }
             })
@@ -126,6 +169,7 @@ export default function App() {
         if (color && color.bg !== undefined && validation) {
             return <View style={{ height: '100%' }}>
                 <ScheduleList
+                    offline_status={offline_status}
                     schedule={schedule}
                     id={id}
                     setSettings={setSettings}
@@ -136,9 +180,9 @@ export default function App() {
             </View>
         } else {
             return <View style={{ alignSelf: 'center' }}>
-                {(responseStatus) ? 
+                {(responseStatus & !offline_status) ?
                     <ActivityIndicator style={{ marginTop: 10 }} size={'large'} color={color.main} />
-                    : 
+                    :
                     <Text style={{ color: color.main, fontFamily: 'Raleway-Medium', fontSize: 18 }}>Нет подключения 😴</Text>}
             </View>
         }

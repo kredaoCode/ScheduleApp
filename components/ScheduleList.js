@@ -3,12 +3,10 @@ import ScheduleDayList from './ScheduleDayList';
 import React, { useState } from 'react'
 import NoSchedule from './NoSchedule';
 
-export default function ScheduleList({ schedule, setSettings, color, id, refreshing, onRefresh }) {
+export default function ScheduleList({ schedule, setSettings, color, id, refreshing, onRefresh, offline_status }) {
 
     const scheduleData = Object.values(schedule);
     const itemWidth = Dimensions.get('window').width;
-
-    const snapToOffsets = Array.from({ length: scheduleData.length }, (_, index) => index * itemWidth);
 
     return (
         <View>
@@ -20,6 +18,7 @@ export default function ScheduleList({ schedule, setSettings, color, id, refresh
                 keyExtractor={(item, index) => index.toString()}
                 renderItem={({ item }) => (
                     <ScheduleDayList
+                        offline_status={offline_status}
                         id={id}
                         scheduleItem={item}
                         setSettings={setSettings}

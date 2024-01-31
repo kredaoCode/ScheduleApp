@@ -2,15 +2,16 @@ import { FlatList, StyleSheet, View, Dimensions } from 'react-native'
 import React from 'react'
 import ScheduleItem from './ScheduleItem';
 import Header from './Header';
+import OfflineStatus from './OfflineStatus';
 
-export default function SchuduleList({ scheduleItem, setSettings, color, id }) {
+export default function SchuduleList({ scheduleItem, setSettings, color, id, offline_status }) {
 
     return (
         <View style={styles.container}>
             {(scheduleItem) ?
                 <>
                     <Header id={id} date={scheduleItem.date} setSettings={setSettings} color={color} />
-
+                    {(offline_status) ? <OfflineStatus color={color}/>: null}
                     <FlatList
                         overScrollMode='never'
                         showsVerticalScrollIndicator={false}

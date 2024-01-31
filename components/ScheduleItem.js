@@ -57,6 +57,7 @@ const styles = StyleSheet.create({
         borderRadius: 15,
         alignItems: 'center',
         justifyContent: 'space-between',
+        elevation: 5,
     },
     locationContainer: {
         paddingVertical: 3,
