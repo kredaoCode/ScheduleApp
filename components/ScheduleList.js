@@ -12,38 +12,22 @@ export default function ScheduleList({ schedule, setSettings, color, id, refresh
         <View>
             <FlatList
                 horizontal
+                pagingEnabled
                 overScrollMode='never'
                 showsHorizontalScrollIndicator={false}
-                data={scheduleData}
+                data={Object.values(schedule)}
                 keyExtractor={(item, index) => index.toString()}
-                renderItem={({ item }) => (
-                    <ScheduleDayList
-                        offline_status={offline_status}
-                        id={id}
-                        scheduleItem={item}
-                        setSettings={setSettings}
-                        color={color}
-                    />
-                )}
-                disableIntervalMomentum={true}
+                renderItem={({ item }) => <ScheduleDayList offline_status={offline_status} id={id} scheduleItem={item} setSettings={setSettings} color={color} />}
                 decelerationRate={0.9}
                 snapToInterval={Dimensions.get('window').width}
+                snapToAlignment={'center'}
                 refreshControl={
                     <RefreshControl
                         refreshing={refreshing}
                         onRefresh={onRefresh}
                         colors={[color.main, color.bg]}
                         progressBackgroundColor={color.bg}
-                    />
-                }
-                ListEmptyComponent={() => (
-                    <NoSchedule
-                        color={color}
-                        setSettings={setSettings}
-                        refreshing={refreshing}
-                        onRefresh={onRefresh}
-                    />
-                )}
+                    />}
             />
         </View>
     )

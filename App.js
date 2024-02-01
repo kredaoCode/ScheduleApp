@@ -2,7 +2,7 @@ import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFonts } from 'expo-font';
 import { ActivityIndicator, Text, StyleSheet, View, useColorScheme } from 'react-native';
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import ScheduleList from './components/ScheduleList';
@@ -28,7 +28,7 @@ export default function App() {
 
     useEffect(() => {
         onFetchUpdateAsync()
-    })
+    }, [])
 
     const colorTheme = useColorScheme();
     const [offline_status, setOffline_status] = useState(false)
