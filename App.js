@@ -16,11 +16,15 @@ export default function App() {
     async function onFetchUpdateAsync() {
         try {
           const update = await Updates.checkForUpdateAsync();
-    
+          alert(update)
+/*
           if (update.isAvailable) {
             await Updates.fetchUpdateAsync();
             await Updates.reloadAsync();
-          }
+            alert('обновления установлены')
+          } else {
+            alert('обновления не найдены')
+*/
         } catch (error) {
           alert(`Ошибка обновления: ${error}`);
         }
