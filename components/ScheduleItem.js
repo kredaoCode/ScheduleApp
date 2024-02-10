@@ -27,7 +27,7 @@ export default function ScheduleItem({ index, info, color }) {
                         <Text style={{ color: color.main + 'A4', fontFamily: 'Raleway-Regular' }}>{item.time}</Text>
                     </View>
                     <Text style={[styles.nameText, { color: color.main }]}>{item.name}</Text>
-                    <View style={[styles.teacherContainer, { backgroundColor: color.bgLight}]}>
+                    <View style={[styles.teacherContainer, {backgroundColor: color.bgLight}]}>
                         <Text style={[styles.teacherText, {color: color.main}]}>{(item.teacher || item.group)}</Text>
                         {(item.location !== null) ?
                             <View style={styles.locationContainer}>

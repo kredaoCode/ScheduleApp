@@ -6,9 +6,7 @@ import {
         View,
     } from 'react-native';
 import React, { useState } from 'react'
-import CircularHue from './CircularHue';
 import ChangeFilter from './ChangeFilter';
-import ChangeThemes from './ChangeThemes';
 
 export default function Settings({ 
     setId,
@@ -30,7 +28,6 @@ export default function Settings({
             >
             <View style={[styles.item, {backgroundColor: color.bg}]}>
                 <ChangeFilter setId={setId} setSettings={setSettings} color={color}/>
-                <CircularHue setSettings={setSettings} color={color} setColor={setColor}/>
             </View>
         </Modal>
     )

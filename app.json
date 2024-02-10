@@ -2,19 +2,14 @@
   "expo": {
     "name": "ScheduleApp",
     "slug": "schedule",
-    "version": "1.3.1",
+    "version": "0.4.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#D2D2D2",
-      "dark": {
-        "image": "./assets/splash.png",
-        "resizeMode": "contain",
-        "backgroundColor": "#1B1B1B"
-      }
+      "backgroundColor": "#1B1B1B"
     },
     "assetBundlePatterns": [
       "**/*"
@@ -31,7 +26,7 @@
         "backgroundColor": "#1D1D1D"
       },
       "package": "com.kredao.schedule",
-      "runtimeVersion": "1.0.0"
+      "runtimeVersion": "0.4.0"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -40,17 +35,6 @@
       "eas": {
         "projectId": "27796f19-61ac-48eb-96b1-9c8739bb23c9"
       }
-    },
-    "plugins": [
-      [
-        "expo-updates",
-        {
-          "username": "kredao"
-        }
-      ]
-    ],
-    "updates": {
-      "url": "https://u.expo.dev/27796f19-61ac-48eb-96b1-9c8739bb23c9"
     }
   }
 }

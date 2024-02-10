@@ -7,32 +7,11 @@ import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import ScheduleList from './components/ScheduleList';
 import Settings from './components/Settings';
-import * as Updates from 'expo-updates';
 
 
 SplashScreen.preventAutoHideAsync();
 
 export default function App() {
-    async function onFetchUpdateAsync() {
-        try {
-          const update = await Updates.checkForUpdateAsync();
-          alert(update)
-/*
-          if (update.isAvailable) {
-            await Updates.fetchUpdateAsync();
-            await Updates.reloadAsync();
-            alert('обновления установлены')
-          } else {
-            alert('обновления не найдены')
-*/
-        } catch (error) {
-          alert(`Ошибка обновления: ${error}`);
-        }
-    }
-
-    useEffect(() => {
-        onFetchUpdateAsync()
-    }, [])
 
     const colorTheme = useColorScheme();
     const [offline_status, setOffline_status] = useState(false)
@@ -43,7 +22,7 @@ export default function App() {
         bg: '#1B1B1B',
         bgNight: '#222222',
         bgLight: '#272727',
-        main: '#235BEA',
+        main: '#FFFFFF',
     });
     const [validation, setValidation] = useState(false);
     const [settings, setSettings] = useState(false);
@@ -62,16 +41,16 @@ export default function App() {
     };
 
     const saveData = async (type) => {
-        if (type == 'id_color') {
+        if (type === 'id_color') {
             await AsyncStorage.setItem('id', JSON.stringify(id));
             await AsyncStorage.setItem('color', JSON.stringify(color));
-        } else if (type == 'schedule') {
+        } else if (type === 'schedule') {
             await AsyncStorage.setItem('schedule', JSON.stringify(schedule));
-        } else if (type == 'all') {
+        } else {
             await AsyncStorage.setItem('id', JSON.stringify(id));
             await AsyncStorage.setItem('color', JSON.stringify(color));
+            await AsyncStorage.setItem('schedule', JSON.stringify(schedule));
         }
-        
     };
     const getData = async () => {
         const getId = await AsyncStorage.getItem('id');
@@ -117,7 +96,6 @@ export default function App() {
                         }
                     } else {
                         getSchedule();
-
                     }
                 })
                 .catch(error => {
@@ -134,7 +112,7 @@ export default function App() {
 
     useEffect(() => {
         loadShedule()
-        //getData();
+        getData();
         SplashScreen.hideAsync();
     }, []);
 
@@ -143,22 +121,22 @@ export default function App() {
     }, [id, color])
 
     useEffect(() => {
-        if (colorTheme == 'light') {
+        if (colorTheme === 'light') {
             setColor(prev => {
                 return {
                     bg: '#D2D2D2',
                     bgNight: '#E2E2E2',
                     bgLight: '#ECECEC',
-                    main: prev.main,
+                    main: (prev.main !== '#FFFFFF') ? prev.main : '#000000',
                 }
             })
-        } else {
+        } else if (colorTheme === 'dark') {
             setColor(prev => {
                 return {
                     bg: '#1B1B1B',
                     bgNight: '#222222',
                     bgLight: '#272727',
-                    main: prev.main,
+                    main: (prev.main !== '#000000') ? prev.main : '#FFFFFF',
                 }
             })
         }
@@ -178,6 +156,7 @@ export default function App() {
                     id={id}
                     setSettings={setSettings}
                     color={color}
+                    setColor={setColor}
                     refreshing={refreshing}
                     onRefresh={onRefresh}
                 />

@@ -4,13 +4,13 @@ import ScheduleItem from './ScheduleItem';
 import Header from './Header';
 import OfflineStatus from './OfflineStatus';
 
-export default function SchuduleList({ scheduleItem, setSettings, color, id, offline_status }) {
+export default function SchuduleList({ scheduleItem, setSettings, color, setColor, id, offline_status }) {
 
     return (
         <View style={styles.container}>
             {(scheduleItem) ?
                 <>
-                    <Header id={id} date={scheduleItem.date} setSettings={setSettings} color={color} />
+                    <Header id={id} date={scheduleItem.date} setSettings={setSettings} color={color} setColor={setColor} />
                     {(offline_status) ? <OfflineStatus color={color}/>: null}
                     <FlatList
                         overScrollMode='never'
