@@ -11,7 +11,7 @@ export default function SchuduleList({ scheduleItem, setSettings, color, setColo
             {(scheduleItem) ?
                 <>
                     <Header id={id} date={scheduleItem.date} setSettings={setSettings} color={color} setColor={setColor} />
-                    {(offline_status) ? <OfflineStatus color={color}/>: null}
+                    {(!offline_status) ? <OfflineStatus color={color}/>: null}
                     <FlatList
                         overScrollMode='never'
                         showsVerticalScrollIndicator={false}

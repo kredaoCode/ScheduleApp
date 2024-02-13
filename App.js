@@ -2,21 +2,22 @@ import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFonts } from 'expo-font';
 import { ActivityIndicator, Text, StyleSheet, View, useColorScheme } from 'react-native';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import ScheduleList from './components/ScheduleList';
 import Settings from './components/Settings';
+import NetInfo from '@react-native-community/netinfo';
+
 
 
 SplashScreen.preventAutoHideAsync();
 
 export default function App() {
 
-    const colorTheme = useColorScheme();
-    const [offline_status, setOffline_status] = useState(false)
+    const [isConnected, setIsConnected] = useState(true);
 
-    const [responseStatus, setResponseStatus] = useState(true);
+    const colorTheme = useColorScheme();
 
     const [color, setColor] = useState({
         bg: '#1B1B1B',
@@ -63,55 +64,63 @@ export default function App() {
             setColor(JSON.parse(getColor))
         }
     };
-    const getSchedule = async () => {
+    const getOfflineSchedule = async () => {
         const getSchedule = await AsyncStorage.getItem('schedule');
 
         if (getSchedule !== null) {
             setSchedule(JSON.parse(getSchedule))
-            setOffline_status(true)
         }
     };
 
 
     const loadShedule = () => {
-        if (id !== undefined && color !== undefined) {
-            fetch(`https://schedule-backend-production.koka.team/v1/schedule?${id.type}_id=${id.id}&is_new=true`)
-                .then(response => {
-                    setResponseStatus(response.ok)
-                    return response.json();
-                })
-                .then(response => {
-                    if (responseStatus) {
-                        const parsedSchedule = {}
-                        Object.assign(parsedSchedule, response.schedule)
-                        setSchedule(parsedSchedule);
-                        if (Object.keys(parsedSchedule).length > 0) {
-                            saveData('schedule')
-                            setValidation(true);
-                            setRefreshing(false)
-                            setOffline_status(false)
-                        } else {
-                            setValidation(false)
-                            setRefreshing(false)
-                        }
-                    } else {
-                        getSchedule();
-                    }
-                })
-                .catch(error => {
-                    console.error('Произошла ошибка при загрузке данных:', error);
+        fetch(`https://schedule-backend-production.koka.team/v1/schedule?${id.type}_id=${id.id}&is_new=true`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                const parsedSchedule = {};
+                Object.assign(parsedSchedule, data.schedule);
+                setSchedule(parsedSchedule);
+                if (Object.keys(parsedSchedule).length > 0) {
+                    setValidation(true);
+                    setRefreshing(false);
+                } else {
                     setValidation(false);
-                    setRefreshing(false)
-                });
-        } else {
-            setRefreshing(false)
-        }
-    }
-
+                    setRefreshing(false);
+                }
+            })
+            .catch(error => {
+                console.error('Произошла ошибка при загрузке данных:', error);
+                setValidation(true);
+                setRefreshing(false);
+                getOfflineSchedule();
+            });
+    };
+    
 
 
     useEffect(() => {
-        loadShedule()
+        const unsubscribe = NetInfo.addEventListener(state => {
+            setIsConnected(state.isConnected);
+            console.log(`${isConnected} + ${state.isConnected}`)
+        });
+
+        return () => {
+            unsubscribe();
+        };
+    }, []);
+
+    useEffect(() => {
+        if(isConnected) {
+            loadShedule()
+        } else if (!isConnected) {
+            getOfflineSchedule()
+        }
+        
         getData();
         SplashScreen.hideAsync();
     }, []);
@@ -119,6 +128,7 @@ export default function App() {
     useEffect(() => {
         saveData('id_color');
     }, [id, color])
+
 
     useEffect(() => {
         if (colorTheme === 'light') {
@@ -148,10 +158,10 @@ export default function App() {
     });
 
     function app() {
-        if (color && color.bg !== undefined && validation) {
+        if (color.bg !== undefined && validation) {
             return <View style={{ height: '100%' }}>
                 <ScheduleList
-                    offline_status={offline_status}
+                    offline_status={isConnected}
                     schedule={schedule}
                     id={id}
                     setSettings={setSettings}
@@ -163,7 +173,7 @@ export default function App() {
             </View>
         } else {
             return <View style={{ alignSelf: 'center' }}>
-                {(responseStatus & !offline_status) ?
+                {(isConnected) ?
                     <ActivityIndicator style={{ marginTop: 10 }} size={'large'} color={color.main} />
                     :
                     <Text style={{ color: color.main, fontFamily: 'Raleway-Medium', fontSize: 18 }}>Нет подключения 😴</Text>}

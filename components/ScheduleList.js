@@ -1,7 +1,6 @@
 import { FlatList, StyleSheet, View, Dimensions, RefreshControl } from 'react-native'
 import ScheduleDayList from './ScheduleDayList';
-import React, { useRef, useState } from 'react'
-import NoSchedule from './NoSchedule';
+import React from 'react'
 
 export default function ScheduleList({ schedule, setSettings, color, setColor, id, refreshing, onRefresh, offline_status }) {
 
