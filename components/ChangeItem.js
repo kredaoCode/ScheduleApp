@@ -1,7 +1,9 @@
 import { TouchableOpacity, StyleSheet, Text } from 'react-native'
-import React from 'react'
+import React, { useContext } from 'react'
+import { Context } from '../context'
 
-export default function ChangeItem({ name, id, setId, type, color, setSettings }) {
+export default function ChangeItem({ name, id, type}) {
+	const {setId, color, setSettings} = useContext(Context);
 	return (
 		<TouchableOpacity style={[styles.button, { backgroundColor: color.bgLight }]} onPress={() => {
 			setId({ id: id, type: type, name: name })

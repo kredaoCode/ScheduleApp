@@ -5,17 +5,12 @@ import {
         Switch,
         View,
     } from 'react-native';
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import ChangeFilter from './ChangeFilter';
+import { Context } from '../context';
 
-export default function Settings({ 
-    setId,
-    setSettings,
-    settings,
-    color,
-    setColor,
-}) {
-    
+export default function Settings() {
+    const {color, settings, setSettings} = useContext(Context)
 
     return (
         <Modal 
@@ -27,7 +22,7 @@ export default function Settings({
             }}
             >
             <View style={[styles.item, {backgroundColor: color.bg}]}>
-                <ChangeFilter setId={setId} setSettings={setSettings} color={color}/>
+                <ChangeFilter />
             </View>
         </Modal>
     )

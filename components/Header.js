@@ -1,10 +1,12 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { Ionicons } from '@expo/vector-icons';
-import React, { useEffect } from 'react'
+import React, { useContext, useEffect } from 'react'
 import Animated, { Easing, useSharedValue, withTiming } from 'react-native-reanimated';
 import ChangeColor from './ChangeColor';
+import { Context } from '../context';
 
-export default function Header({ date, setSettings, color, setColor, id }) {
+export default function Header({ date }) {
+    const {color, setSettings, id} = useContext(Context)
 
     const opacity = useSharedValue(0);
 
@@ -31,7 +33,7 @@ export default function Header({ date, setSettings, color, setColor, id }) {
             <View style={[styles.container, { backgroundColor: color.bgNight }]}>
                 <Text style={{ color: color.main, fontFamily: 'Raleway-Medium' }}>{id.name}, {FormatedDate(date)}</Text>
                 <View style={{ flexDirection: 'row', alignItems: 'center'}}>
-                    <ChangeColor setSettings={setSettings} color={color} setColor={setColor} />
+                    <ChangeColor setSettings={setSettings} />
                     <TouchableOpacity onPress={() => setSettings(true)}>
                         <Ionicons name="ellipsis-vertical" size={24} color={color.main} />
                     </TouchableOpacity>

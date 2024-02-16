@@ -1,8 +1,11 @@
 import { FlatList, StyleSheet, View, Dimensions, RefreshControl } from 'react-native'
 import ScheduleDayList from './ScheduleDayList';
-import React from 'react'
+import React, { useContext } from 'react'
+import { Context } from '../context';
 
-export default function ScheduleList({ schedule, setSettings, color, setColor, id, refreshing, onRefresh, offline_status }) {
+
+export default function ScheduleList({refreshing, onRefresh}) {
+    const {color, schedule} = useContext(Context);
 
     return (
         <View>
@@ -12,7 +15,7 @@ export default function ScheduleList({ schedule, setSettings, color, setColor, i
                 showsHorizontalScrollIndicator={false}
                 data={Object.values(schedule)}
                 keyExtractor={(item, index) => index.toString()}
-                renderItem={({ item }) => <ScheduleDayList offline_status={offline_status} id={id} scheduleItem={item} setSettings={setSettings} color={color} setColor={setColor} />}
+                renderItem={({ item }) => <ScheduleDayList scheduleItem={item} />}
                 decelerationRate={0.9}
                 snapToInterval={Dimensions.get('window').width}
                 disableIntervalMomentum={true}
@@ -22,6 +25,7 @@ export default function ScheduleList({ schedule, setSettings, color, setColor, i
                         onRefresh={onRefresh}
                         colors={[color.main, color.bg]}
                         progressBackgroundColor={color.bg}
+                        enabled={false}
                     />}
             />
         </View>

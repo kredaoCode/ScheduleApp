@@ -1,23 +1,25 @@
 import { FlatList, StyleSheet, View, Dimensions } from 'react-native'
-import React from 'react'
+import React, { useContext } from 'react'
 import ScheduleItem from './ScheduleItem';
 import Header from './Header';
 import OfflineStatus from './OfflineStatus';
+import { Context } from '../context';
 
-export default function SchuduleList({ scheduleItem, setSettings, color, setColor, id, offline_status }) {
+export default function SchuduleList({ scheduleItem }) {
+    const {isConnected} = useContext(Context)
 
     return (
         <View style={styles.container}>
             {(scheduleItem) ?
                 <>
-                    <Header id={id} date={scheduleItem.date} setSettings={setSettings} color={color} setColor={setColor} />
-                    {(!offline_status) ? <OfflineStatus color={color}/>: null}
+                    <Header date={scheduleItem.date} />
+                    {(!isConnected) ? <OfflineStatus/>: null}
                     <FlatList
                         overScrollMode='never'
                         showsVerticalScrollIndicator={false}
                         data={scheduleItem.schedule.filter(item => item !== null)}
                         keyExtractor={(item, index) => index.toString()}
-                        renderItem={({ item, index }) => <ScheduleItem index={index} info={item} color={color} />}
+                        renderItem={({ item, index }) => <ScheduleItem index={index} info={item} />}
                     />
                 </>
                 : null}

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Modal, TouchableOpacity, StyleSheet, Text, View, TouchableWithoutFeedback } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -8,8 +8,10 @@ import ColorPicker, {
     SaturationSlider,
     BrightnessSlider,
 } from 'reanimated-color-picker';
+import { Context } from '../context';
 
-export default function ChangeColor({ setSettings, color, setColor }) {
+export default function ChangeColor({ setSettings }) {
+    const {color, setColor} = useContext(Context)
     const [showModal, setShowModal] = useState(false);
 
     const selectedColor = useSharedValue(color.main);

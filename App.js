@@ -8,13 +8,12 @@ import { StatusBar } from 'expo-status-bar';
 import ScheduleList from './components/ScheduleList';
 import Settings from './components/Settings';
 import NetInfo from '@react-native-community/netinfo';
-
+import { Context } from './context'
 
 
 SplashScreen.preventAutoHideAsync();
 
 export default function App() {
-
     const [isConnected, setIsConnected] = useState(true);
 
     const colorTheme = useColorScheme();
@@ -77,36 +76,44 @@ export default function App() {
         fetch(`https://schedule-backend-production.koka.team/v1/schedule?${id.type}_id=${id.id}&is_new=true`)
             .then(response => {
                 if (!response.ok) {
-                    throw new Error('Network response was not ok');
+                    return null;
+                } else {
+                    return response.json();
                 }
-                return response.json();
             })
             .then(data => {
-                const parsedSchedule = {};
-                Object.assign(parsedSchedule, data.schedule);
-                setSchedule(parsedSchedule);
-                if (Object.keys(parsedSchedule).length > 0) {
+                if (data !== null) {
+                    const parsedSchedule = {};
+                    Object.assign(parsedSchedule, data.schedule);
+                    setSchedule(parsedSchedule);
+                    if (Object.keys(parsedSchedule).length > 0) {
+                        setValidation(true);
+                        setRefreshing(false);
+                    } else {
+                        setValidation(false);
+                        setRefreshing(false);
+                        // добавить случай об отсутствии расписания допустим в момент лета
+                    }
+                } else {
                     setValidation(true);
                     setRefreshing(false);
-                } else {
-                    setValidation(false);
-                    setRefreshing(false);
+                    getOfflineSchedule();
                 }
             })
             .catch(error => {
-                console.error('Произошла ошибка при загрузке данных:', error);
                 setValidation(true);
                 setRefreshing(false);
                 getOfflineSchedule();
             });
     };
-    
 
+    useMemo(() => {
+        loadShedule()
+    }, [id])
 
     useEffect(() => {
         const unsubscribe = NetInfo.addEventListener(state => {
             setIsConnected(state.isConnected);
-            console.log(`${isConnected} + ${state.isConnected}`)
         });
 
         return () => {
@@ -115,12 +122,12 @@ export default function App() {
     }, []);
 
     useEffect(() => {
-        if(isConnected) {
+        if (isConnected) {
             loadShedule()
         } else if (!isConnected) {
             getOfflineSchedule()
         }
-        
+
         getData();
         SplashScreen.hideAsync();
     }, []);
@@ -128,7 +135,6 @@ export default function App() {
     useEffect(() => {
         saveData('id_color');
     }, [id, color])
-
 
     useEffect(() => {
         if (colorTheme === 'light') {
@@ -161,12 +167,6 @@ export default function App() {
         if (color.bg !== undefined && validation) {
             return <View style={{ height: '100%' }}>
                 <ScheduleList
-                    offline_status={isConnected}
-                    schedule={schedule}
-                    id={id}
-                    setSettings={setSettings}
-                    color={color}
-                    setColor={setColor}
                     refreshing={refreshing}
                     onRefresh={onRefresh}
                 />
@@ -182,21 +182,19 @@ export default function App() {
     }
 
     return (
-        <SafeAreaProvider>
-            <SafeAreaView style={[styles.container, { backgroundColor: color.bg }]}
-                edges={['bottom', 'top', 'left', 'right']}
-            >
-                {app()}
-                <Settings
-                    setId={setId}
-                    settings={settings}
-                    setSettings={setSettings}
-                    color={color}
-                    setColor={setColor}
-                />
-                <StatusBar style="light" />
-            </SafeAreaView>
-        </SafeAreaProvider>
+        <Context.Provider value={{
+            color, setColor, isConnected, settings, setSettings, schedule, id, setId
+        }}>
+            <SafeAreaProvider>
+                <SafeAreaView style={[styles.container, { backgroundColor: color.bg }]}
+                    edges={['bottom', 'top', 'left', 'right']}
+                >
+                    {app()}
+                    <Settings />
+                    <StatusBar style="light" />
+                </SafeAreaView>
+            </SafeAreaProvider>
+        </Context.Provider>
     );
 }
 

@@ -1,12 +1,15 @@
 import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import React, { useContext } from 'react'
+import { Context } from '../context'
 
-export default function OfflineStatus({color}) {
-  return (
-    <View style={[styles.container, {backgroundColor: color.main}]}>
-      <Text style={{ color: color.bg, fontFamily: 'Raleway-Medium', fontSize: 18}}>#Не актуальное расписание#</Text>
-    </View>
-  )
+export default function OfflineStatus() {
+    const { color } = useContext(Context);
+
+    return (
+        <View style={[styles.container, { backgroundColor: color.main }]}>
+            <Text style={{ color: color.bg, fontFamily: 'Raleway-Medium', fontSize: 18 }}>#Не актуальное расписание#</Text>
+        </View>
+    )
 }
 
 const styles = StyleSheet.create({

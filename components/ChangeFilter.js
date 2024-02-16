@@ -8,10 +8,12 @@ import {
     ActivityIndicator,
 } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import ChangeItem from './ChangeItem';
+import { Context } from '../context';
 
-export default function ChangeFilter({ setId, setSettings, color }) {
+export default function ChangeFilter() {
+    const {setId, setSettings, color} = useContext(Context)
     const [changeId, setChangeId] = useState();
     const [loading, setLoading] = useState(false);
     const [input, setInput] = useState('');
@@ -74,10 +76,8 @@ export default function ChangeFilter({ setId, setSettings, color }) {
                         renderItem={({ item }) => <ChangeItem 
                             name={item.name} 
                             id={item.id} 
-                            setId={setId}
                             type={type}
-                            color={color}
-                            setSettings={setSettings}
+
                         />}
                     />
                 </> : <></>
