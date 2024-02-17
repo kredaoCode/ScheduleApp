@@ -25,7 +25,7 @@ export default function ScheduleList({refreshing, onRefresh}) {
                         onRefresh={onRefresh}
                         colors={[color.main, color.bg]}
                         progressBackgroundColor={color.bg}
-                        enabled={false}
+                        enabled={true}
                     />}
             />
         </View>

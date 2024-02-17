@@ -19,20 +19,25 @@ export default function ScheduleItem({ index, info }) {
     function timeToEnd(time) {
         const timeRegex = /\b\d{1,2}:\d{2}\b/g;
         const times = time.match(timeRegex);
-
+    
         const currentTime = new Date();
         const currentTimeHours = currentTime.getHours();
         const currentTimeMinutes = currentTime.getMinutes();
         const currentTotalMinutes = currentTimeHours * 60 + currentTimeMinutes;
-
+    
         if (times && times.length < 3) {
             const firstTime = times[0].split(':');
             const firstTimeHours = parseInt(firstTime[0], 10);
             const firstTimeMinutes = parseInt(firstTime[1], 10);
             const firstTotalMinutes = firstTimeHours * 60 + firstTimeMinutes;
 
-            if (firstTotalMinutes > currentTotalMinutes) {
-                const timeDifference = firstTotalMinutes - currentTotalMinutes;
+            const secondTime = times[1].split(':');
+            const secondTimeHours = parseInt(secondTime[0], 10);
+            const secondTimeMinutes = parseInt(secondTime[1], 10);
+            const secondTotalMinutes = secondTimeHours * 60 + secondTimeMinutes;
+    
+            if (firstTotalMinutes < currentTotalMinutes && secondTotalMinutes > currentTime) {
+                const timeDifference = secondTotalMinutes - currentTotalMinutes;
                 const hoursDifference = Math.floor(timeDifference / 60);
                 const minutesDifference = timeDifference % 60;
                 return `Осталось ${hoursDifference} часов и ${minutesDifference} минут`;
@@ -40,12 +45,16 @@ export default function ScheduleItem({ index, info }) {
                 return time;
             }
         } else if (times && times.length > 2) {
+            const firstTime = times[0].split(':');
             const secondTime = times[2].split(':');
-            const secondTimeHours = parseInt(secondTime[2], 10);
-            const secondTimeMinutes = parseInt(secondTime[3], 10);
+            const firstTimeHours = parseInt(firstTime[0], 10);
+            const firstTimeMinutes = parseInt(firstTime[1], 10);
+            const secondTimeHours = parseInt(secondTime[0], 10);
+            const secondTimeMinutes = parseInt(secondTime[1], 10);
+            const firstTotalMinutes = firstTimeHours * 60 + firstTimeMinutes;
             const secondTotalMinutes = secondTimeHours * 60 + secondTimeMinutes;
-
-            if (secondTotalMinutes > currentTotalMinutes) {
+    
+            if (firstTotalMinutes < currentTotalMinutes && secondTotalMinutes > currentTotalMinutes) {
                 const timeDifference = secondTotalMinutes - currentTotalMinutes;
                 const hoursDifference = Math.floor(timeDifference / 60);
                 const minutesDifference = timeDifference % 60;
@@ -57,6 +66,7 @@ export default function ScheduleItem({ index, info }) {
             return 'Неверный формат времени';
         }
     }
+    
 
 return (
     <Animated.View style={[styles.container, { backgroundColor: color.bgNight, opacity }]}>

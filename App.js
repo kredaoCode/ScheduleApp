@@ -89,6 +89,7 @@ export default function App() {
                     if (Object.keys(parsedSchedule).length > 0) {
                         setValidation(true);
                         setRefreshing(false);
+                        saveData('schedule')
                     } else {
                         setValidation(false);
                         setRefreshing(false);
