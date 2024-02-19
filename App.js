@@ -167,10 +167,7 @@ export default function App() {
     function app() {
         if (color.bg !== undefined && validation) {
             return <View style={{ height: '100%' }}>
-                <ScheduleList
-                    refreshing={refreshing}
-                    onRefresh={onRefresh}
-                />
+                <ScheduleList/>
             </View>
         } else {
             return <View style={{ alignSelf: 'center' }}>
@@ -184,7 +181,7 @@ export default function App() {
 
     return (
         <Context.Provider value={{
-            color, setColor, isConnected, settings, setSettings, schedule, id, setId
+            color, setColor, isConnected, settings, setSettings, schedule, id, setId, refreshing, onRefresh
         }}>
             <SafeAreaProvider>
                 <SafeAreaView style={[styles.container, { backgroundColor: color.bg }]}

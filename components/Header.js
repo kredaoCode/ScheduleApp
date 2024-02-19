@@ -1,21 +1,11 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { Ionicons } from '@expo/vector-icons';
-import React, { useContext, useEffect } from 'react'
-import Animated, { Easing, useSharedValue, withTiming } from 'react-native-reanimated';
+import React, { useContext } from 'react'
 import ChangeColor from './ChangeColor';
 import { Context } from '../context';
 
 export default function Header({ date }) {
     const {color, setSettings, id} = useContext(Context)
-
-    const opacity = useSharedValue(0);
-
-    useEffect(() => {
-        opacity.value = withTiming(1, {
-            duration: 300,
-            easing: Easing.inOut(Easing.ease)
-        });
-    }, [])
 
     function FormatedDate(date) {
         let today = new Date(date * 1000);
@@ -29,7 +19,7 @@ export default function Header({ date }) {
     }
 
     return (
-        <Animated.View style={{ opacity }}>
+        <View>
             <View style={[styles.container, { backgroundColor: color.bgNight }]}>
                 <Text style={{ color: color.main, fontFamily: 'Raleway-Medium' }}>{id.name}, {FormatedDate(date)}</Text>
                 <View style={{ flexDirection: 'row', alignItems: 'center'}}>
@@ -39,7 +29,7 @@ export default function Header({ date }) {
                     </TouchableOpacity>
                 </View>
             </View>
-        </Animated.View>
+        </View>
     )
 }
 
