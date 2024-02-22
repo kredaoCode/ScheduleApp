@@ -1,7 +1,6 @@
 import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useFonts } from 'expo-font';
-import { ActivityIndicator, Text, StyleSheet, View, useColorScheme } from 'react-native';
+import { StyleSheet, View, useColorScheme } from 'react-native';
 import { useState, useEffect, useMemo } from 'react';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
@@ -9,11 +8,14 @@ import ScheduleList from './components/ScheduleList';
 import Settings from './components/Settings';
 import NetInfo from '@react-native-community/netinfo';
 import { Context } from './context'
+import Indicator from './components/Indicator';
 
 
 SplashScreen.preventAutoHideAsync();
 
 export default function App() {
+
+    const [isSchedule, setIsShedule] = useState(false);
     const [isConnected, setIsConnected] = useState(true);
 
     const colorTheme = useColorScheme();
@@ -37,11 +39,10 @@ export default function App() {
 
     const onRefresh = () => {
         setRefreshing(true);
-        loadShedule();
+        loadSchedule();
     };
 
     const saveData = async (type) => {
-        console.log("save")
         if (type === 'id_color') {
             await AsyncStorage.setItem('id', JSON.stringify(id));
             await AsyncStorage.setItem('color', JSON.stringify(color));
@@ -50,7 +51,7 @@ export default function App() {
         } else {
             await AsyncStorage.setItem('id', JSON.stringify(id));
             await AsyncStorage.setItem('color', JSON.stringify(color));
-            await AsyncStorage.setItem('schedule', JSON.stringify(schedule));
+            //await AsyncStorage.setItem('schedule', JSON.stringify(schedule));
         }
     };
     const getData = async () => {
@@ -73,14 +74,12 @@ export default function App() {
     };
 
 
-    const loadShedule = () => {
+    const loadSchedule = () => {
         fetch(`https://schedule-backend-production.koka.team/v1/schedule?${id.type}_id=${id.id}&is_new=true`)
             .then(response => {
                 if (response.ok) {
-                    console.log(response.status)
                     return response.json();
                 } else {
-                    console.log(response.status)
                     return null;
                 }
             })
@@ -89,18 +88,16 @@ export default function App() {
                     const parsedSchedule = {};
                     Object.assign(parsedSchedule, data.schedule);
                     setSchedule(parsedSchedule);
-                    if (Object.keys(parsedSchedule).length > 0) {
-                        setSchedule(parsedSchedule);
-                        setValidation(true);
-                        setRefreshing(false);
-                    } else {
-                        setValidation(false);
-                        setRefreshing(false);
-                        // добавить случай об отсутствии расписания допустим в момент лета
-                    }
-                } else if (!isConnected && data == null) {
-                    setValidation(true);
                     setRefreshing(false);
+                    if (Object.keys(parsedSchedule).length > 0) {
+                        setValidation(true);
+                        setIsShedule(true)
+                    } else {
+                        setValidation(false)
+                        setIsShedule(false);
+                    }
+                } else if (!isConnected || data == null) {
+                    setValidation(false);
                     //getOfflineSchedule();
                 }
             })
@@ -108,6 +105,7 @@ export default function App() {
                 setValidation(true);
                 setRefreshing(false);
                 //getOfflineSchedule();
+                console.log('ошибка в catch')
             });
     };
 
@@ -125,15 +123,13 @@ export default function App() {
         if (id.id !== undefined) {
             getData()
             SplashScreen.hideAsync()
-            loadShedule()
+            loadSchedule()
         }
     }, [])
 
-    useEffect(() => {
-        if(!settings) {
-            saveData()
-        }
-    },[id, color])
+    useMemo(() => {
+        saveData('id_color')
+    }, [id, color])
 
     useMemo(() => {
         if (colorTheme === 'light') {
@@ -157,29 +153,19 @@ export default function App() {
         }
     }, [colorTheme])
 
-    const [fontsLoaded, fontError] = useFonts({
-        'Raleway-Regular': require('./assets/fonts/Raleway-Regular.ttf'),
-        'Raleway-Medium': require('./assets/fonts/Raleway-Medium.ttf'),
-    });
-
     function app() {
         if (color.bg !== undefined && validation) {
             return <View style={{ height: '100%' }}>
                 <ScheduleList key="scheduleList" />
             </View>
         } else {
-            return <View style={{ alignSelf: 'center' }}>
-                {(isConnected) ?
-                    <ActivityIndicator style={{ marginTop: 10 }} size={'large'} color={color.main} />
-                    :
-                    <Text style={{ color: color.main, fontFamily: 'Raleway-Medium', fontSize: 18 }}>Нет подключения 😴</Text>}
-            </View>
+            return <Indicator />
         }
     }
 
     return (
         <Context.Provider value={{
-            color, setColor, isConnected, settings, setSettings, schedule, id, setId, refreshing, onRefresh
+            color, setColor, isConnected, settings, setSettings, schedule, id, setId, refreshing, onRefresh, isSchedule, loadSchedule
         }}>
             <SafeAreaProvider>
                 <SafeAreaView style={[styles.container, { backgroundColor: color.bg }]}

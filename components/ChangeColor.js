@@ -34,9 +34,7 @@ export default function ChangeColor({ setSettings }) {
                 visible={showModal}
                 animationType="slide"
             >
-                {/* Обернем содержимое модального окна в View */}
                 <View style={styles.modalContent}>
-                    {/* Добавим прозрачную View, которая будет закрывать модальное окно */}
                     <TouchableOpacity
                         style={styles.overlay}
                         onPress={() => setShowModal(false)}
@@ -48,7 +46,6 @@ export default function ChangeColor({ setSettings }) {
                             thumbSize={24}
                             thumbShape='circle'
                             onComplete={onColorSelect}
-                            adaptSpectrum
                             boundedThumb
                         >
                             <HueSlider style={styles.sliderStyle} />

@@ -35,6 +35,17 @@
       "eas": {
         "projectId": "27796f19-61ac-48eb-96b1-9c8739bb23c9"
       }
-    }
+    },
+    "plugins": [
+      [
+        "expo-font",
+        {
+          "fonts": [
+            "./assets/fonts/Raleway-Medium.ttf",
+            "./assets/fonts/Raleway-Regular.ttf"
+          ]
+        }
+      ]
+    ]
   }
 }

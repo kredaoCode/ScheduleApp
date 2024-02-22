@@ -15,7 +15,7 @@ import SegmentedControl from '@react-native-segmented-control/segmented-control'
 
 export default function ChangeFilter() {
     const [selectedIndex, setSelectedIndex] = useState(1)
-    const { setId, setSettings, color } = useContext(Context)
+    const {setSettings, color} = useContext(Context)
     const [changeId, setChangeId] = useState();
     const [loading, setLoading] = useState(false);
     const [input, setInput] = useState('');

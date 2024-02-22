@@ -3,11 +3,12 @@ import React, { useContext } from 'react'
 import { Context } from '../context'
 
 export default function ChangeItem({ name, id, type}) {
-	const {setId, color, setSettings} = useContext(Context);
+	const {setId, color, setSettings, loadSchedule } = useContext(Context);
 	return (
 		<TouchableOpacity style={[styles.button, { backgroundColor: color.bgLight }]} onPress={() => {
 			setId({ id: id, type: type, name: name })
 			setSettings(prev => !prev);
+			loadSchedule()
 		}}>
 			<Text style={{ color: color.main + 'A4', fontFamily: 'Raleway-Medium' }}>{name}</Text>
 		</TouchableOpacity>
