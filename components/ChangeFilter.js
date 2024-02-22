@@ -8,12 +8,14 @@ import {
     ActivityIndicator,
 } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import ChangeItem from './ChangeItem';
 import { Context } from '../context';
+import SegmentedControl from '@react-native-segmented-control/segmented-control'
 
 export default function ChangeFilter() {
-    const {setId, setSettings, color} = useContext(Context)
+    const [selectedIndex, setSelectedIndex] = useState(1)
+    const { setId, setSettings, color } = useContext(Context)
     const [changeId, setChangeId] = useState();
     const [loading, setLoading] = useState(false);
     const [input, setInput] = useState('');
@@ -38,6 +40,10 @@ export default function ChangeFilter() {
             })
     }
 
+    useEffect(() => {
+        loadGroup();
+    }, [])
+
 
     return (
         <View>
@@ -47,40 +53,53 @@ export default function ChangeFilter() {
                     <AntDesign name="close" size={24} color={color.main} />
                 </TouchableOpacity>
             </View>
-            <View style={styles.change}>
-                <TouchableOpacity style={[styles.changeButton, { backgroundColor: color.bgLight }]} onPress={() => {
-                    loadTeachers();
-                    setLoading(true);
-                }}>
-                    <Text style={{ fontFamily: 'Raleway-Medium', color: color.main }}>Преподаватель</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={[styles.changeButton, { backgroundColor: color.bgLight }]} onPress={() => {
-                    loadGroup();
-                    setLoading(true);
-                }}>
-                    <Text style={{ fontFamily: 'Raleway-Medium', color: color.main }}>Группа</Text>
-                </TouchableOpacity>
+            <View>
+                <SegmentedControl
+                    style={styles.segmented}
+                    values={["Преподаватель", "Группа"]}
+                    selectedIndex={selectedIndex}
+                    onChange={(event) => {
+                        if (event.nativeEvent.selectedSegmentIndex == 0) {
+                            loadTeachers()
+                        } else if (event.nativeEvent.selectedSegmentIndex == 1) {
+                            loadGroup()
+                        }
+                        setSelectedIndex(event.nativeEvent.selectedSegmentIndex)
+                        setLoading(true);
+                    }}
+                    tintColor={color.main}
+                    backgroundColor={color.bgLight}
+                    fontStyle={{
+                        color: color.main,
+                        fontFamily: 'Raleway-Medium'
+                    }}
+                    activeFontStyle={{
+                        color: color.bg,
+                        fontFamily: 'Raleway-Regular'
+                    }}
+                />
             </View>
             {(!loading) ?
-                (changeId !== undefined) ? <>
+                <>
                     <TextInput
                         style={[styles.input, { borderColor: color.main, color: color.main, fontFamily: 'Raleway-Regular' }]}
-                        placeholder={(type == 'group') ? 'Группа' : 'Преподаватель'}
+                        placeholder={'Группа or Преподаватель'}
                         placeholderTextColor={color.main + '85'}
                         value={input}
                         onChangeText={setInput}
                     />
-                    <FlatList
-                        style={styles.list}
-                        data={changeId.filter(item => item.name.toLowerCase().includes(input.toLowerCase()))}
-                        renderItem={({ item }) => <ChangeItem 
-                            name={item.name} 
-                            id={item.id} 
-                            type={type}
-
-                        />}
-                    />
-                </> : <></>
+                    {(changeId !== undefined) ?
+                        <FlatList
+                            style={styles.list}
+                            data={changeId.filter(item => item.name.toLowerCase().includes(input.toLowerCase()))}
+                            renderItem={({ item }) => <ChangeItem
+                                name={item.name}
+                                id={item.id}
+                                type={type}
+                            />}
+                        />
+                        : <></>}
+                </>
                 : <><ActivityIndicator style={{ marginTop: 10 }} size={'large'} color={color.main} /></>}
         </View>
     )
@@ -88,7 +107,6 @@ export default function ChangeFilter() {
 
 const styles = StyleSheet.create({
     change: {
-        width: '100%',
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'center'
@@ -110,13 +128,18 @@ const styles = StyleSheet.create({
     },
     input: {
         paddingHorizontal: 12,
-        paddingVertical: 6,
-        margin: 10,
+        paddingVertical: 10,
+        marginTop: 10,
         borderWidth: 1,
-        borderRadius: 13,
+        borderRadius: 8,
     },
     list: {
         height: 300,
-        margin: 10,
+        marginTop: 10,
     },
+    segmented: {
+        height: 55,
+        marginTop: 10,
+        marginBottom: 10,
+    }
 })

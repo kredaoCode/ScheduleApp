@@ -41,6 +41,7 @@ export default function App() {
     };
 
     const saveData = async (type) => {
+        console.log("save")
         if (type === 'id_color') {
             await AsyncStorage.setItem('id', JSON.stringify(id));
             await AsyncStorage.setItem('color', JSON.stringify(color));
@@ -75,42 +76,40 @@ export default function App() {
     const loadShedule = () => {
         fetch(`https://schedule-backend-production.koka.team/v1/schedule?${id.type}_id=${id.id}&is_new=true`)
             .then(response => {
-                if (!response.ok) {
-                    return null;
-                } else {
+                if (response.ok) {
+                    console.log(response.status)
                     return response.json();
+                } else {
+                    console.log(response.status)
+                    return null;
                 }
             })
             .then(data => {
-                if (data !== null) {
+                if (data !== null && isConnected) {
                     const parsedSchedule = {};
                     Object.assign(parsedSchedule, data.schedule);
                     setSchedule(parsedSchedule);
                     if (Object.keys(parsedSchedule).length > 0) {
+                        setSchedule(parsedSchedule);
                         setValidation(true);
                         setRefreshing(false);
-                        saveData('schedule')
                     } else {
                         setValidation(false);
                         setRefreshing(false);
                         // добавить случай об отсутствии расписания допустим в момент лета
                     }
-                } else {
+                } else if (!isConnected && data == null) {
                     setValidation(true);
                     setRefreshing(false);
-                    getOfflineSchedule();
+                    //getOfflineSchedule();
                 }
             })
             .catch(error => {
                 setValidation(true);
                 setRefreshing(false);
-                getOfflineSchedule();
+                //getOfflineSchedule();
             });
     };
-
-    useMemo(() => {
-        loadShedule()
-    }, [id])
 
     useEffect(() => {
         const unsubscribe = NetInfo.addEventListener(state => {
@@ -122,22 +121,21 @@ export default function App() {
         };
     }, []);
 
-    useEffect(() => {
-        if (isConnected) {
+    useMemo(() => {
+        if (id.id !== undefined) {
+            getData()
+            SplashScreen.hideAsync()
             loadShedule()
-        } else if (!isConnected) {
-            getOfflineSchedule()
         }
-
-        getData();
-        SplashScreen.hideAsync();
-    }, []);
+    }, [])
 
     useEffect(() => {
-        saveData('id_color');
-    }, [id, color])
+        if(!settings) {
+            saveData()
+        }
+    },[id, color])
 
-    useEffect(() => {
+    useMemo(() => {
         if (colorTheme === 'light') {
             setColor(prev => {
                 return {
@@ -167,7 +165,7 @@ export default function App() {
     function app() {
         if (color.bg !== undefined && validation) {
             return <View style={{ height: '100%' }}>
-                <ScheduleList/>
+                <ScheduleList key="scheduleList" />
             </View>
         } else {
             return <View style={{ alignSelf: 'center' }}>

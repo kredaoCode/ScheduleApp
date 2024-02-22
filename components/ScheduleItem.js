@@ -8,13 +8,12 @@ export default function ScheduleItem({ index, info }) {
 
     return (
         <View style={[styles.container, { backgroundColor: color.bgNight }]}>
-            {info.map(item =>
-                <View style={{ marginVertical: 5 }} key={item.name}>
+            {info.map((item, index) =>
+                <View style={{ marginVertical: 5 }} key={`${item.name}_${index}`}>
                     <View style={styles.header}>
                         {item.type == "Лекция" ?
                             <Ionicons name="school" size={16} color={color.main + 'A4'} /> :
-                            <SimpleLineIcons name="chemistry" size={16} color={color.main + 'A4'}
-                            />}
+                            <SimpleLineIcons name="chemistry" size={16} color={color.main + 'A4'} />}
                         <Text style={[styles.typeText, { color: color.main + 'A4' }]}>{item.type}</Text>
                         <Text style={{ color: color.main + 'A4', fontFamily: 'Raleway-Regular' }}>{item.time}</Text>
                     </View>
@@ -29,6 +28,7 @@ export default function ScheduleItem({ index, info }) {
                     </View>
                 </View>
             )}
+
         </View>
     )
 }
