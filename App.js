@@ -4,18 +4,18 @@ import { StyleSheet, View, useColorScheme } from 'react-native';
 import { useState, useEffect, useMemo } from 'react';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
-import ScheduleList from './components/ScheduleList';
-import Settings from './components/Settings';
+import ScheduleList from './widgets/schedule/ScheduleList';
+import Settings from './widgets/settings/Settings';
 import NetInfo from '@react-native-community/netinfo';
 import { Context } from './context'
-import Indicator from './components/Indicator';
+import Indicator from './widgets/Indicator';
 
 
 SplashScreen.preventAutoHideAsync();
 
 export default function App() {
 
-    const [isSchedule, setIsShedule] = useState(false);
+    const [isSchedule, setIsShedule] = useState(true);
     const [isConnected, setIsConnected] = useState(true);
 
     const colorTheme = useColorScheme();
@@ -37,22 +37,17 @@ export default function App() {
 
     const [refreshing, setRefreshing] = useState(false);
 
+
+
     const onRefresh = () => {
         setRefreshing(true);
         loadSchedule();
     };
 
-    const saveData = async (type) => {
-        if (type === 'id_color') {
-            await AsyncStorage.setItem('id', JSON.stringify(id));
-            await AsyncStorage.setItem('color', JSON.stringify(color));
-        } else if (type === 'schedule') {
-            await AsyncStorage.setItem('schedule', JSON.stringify(schedule));
-        } else {
-            await AsyncStorage.setItem('id', JSON.stringify(id));
-            await AsyncStorage.setItem('color', JSON.stringify(color));
-            //await AsyncStorage.setItem('schedule', JSON.stringify(schedule));
-        }
+    const saveData = async () => {
+        await AsyncStorage.setItem('id', JSON.stringify(id));
+        await AsyncStorage.setItem('color', JSON.stringify(color));
+        //await AsyncStorage.setItem('schedule', JSON.stringify(schedule));
     };
     const getData = async () => {
         const getId = await AsyncStorage.getItem('id');
@@ -75,6 +70,7 @@ export default function App() {
 
 
     const loadSchedule = () => {
+        setValidation(false)
         fetch(`https://schedule-backend-production.koka.team/v1/schedule?${id.type}_id=${id.id}&is_new=true`)
             .then(response => {
                 if (response.ok) {
@@ -102,7 +98,7 @@ export default function App() {
                 }
             })
             .catch(error => {
-                setValidation(true);
+                setValidation(false);
                 setRefreshing(false);
                 //getOfflineSchedule();
                 console.log('ошибка в catch')
@@ -120,19 +116,22 @@ export default function App() {
     }, []);
 
     useMemo(() => {
-        if (id.id !== undefined) {
-            getData()
+        if (id.id !== undefined && isConnected) {
             SplashScreen.hideAsync()
             loadSchedule()
         }
+    }, [isConnected, id])
+
+    useMemo(() => {
+        getData();
     }, [])
 
     useMemo(() => {
-        saveData('id_color')
+        saveData()
     }, [id, color])
 
     useMemo(() => {
-        if (colorTheme === 'light') {
+        if (colorTheme == 'light') {
             setColor(prev => {
                 return {
                     bg: '#D2D2D2',
@@ -141,7 +140,7 @@ export default function App() {
                     main: (prev.main !== '#FFFFFF') ? prev.main : '#000000',
                 }
             })
-        } else if (colorTheme === 'dark') {
+        } else if (colorTheme == 'dark') {
             setColor(prev => {
                 return {
                     bg: '#1B1B1B',
@@ -153,25 +152,15 @@ export default function App() {
         }
     }, [colorTheme])
 
-    function app() {
-        if (color.bg !== undefined && validation) {
-            return <View style={{ height: '100%' }}>
-                <ScheduleList key="scheduleList" />
-            </View>
-        } else {
-            return <Indicator />
-        }
-    }
-
     return (
         <Context.Provider value={{
-            color, setColor, isConnected, settings, setSettings, schedule, id, setId, refreshing, onRefresh, isSchedule, loadSchedule
+            color, setColor, isConnected, settings, setSettings, schedule, id, setId, refreshing, onRefresh, isSchedule, colorTheme
         }}>
             <SafeAreaProvider>
                 <SafeAreaView style={[styles.container, { backgroundColor: color.bg }]}
                     edges={['bottom', 'top', 'left', 'right']}
                 >
-                    {app()}
+                    {(color.bg !== undefined && validation) ? <ScheduleList /> : <Indicator />}
                     <Settings />
                     <StatusBar style="light" />
                 </SafeAreaView>

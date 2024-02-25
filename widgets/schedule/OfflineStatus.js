@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React, { useContext } from 'react'
-import { Context } from '../context'
+import { Context } from '../../context'
 
 export default function OfflineStatus() {
     const { color } = useContext(Context);

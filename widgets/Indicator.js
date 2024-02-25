@@ -23,7 +23,7 @@ export default function Indicator() {
                 </View>
             }
         } else {
-            return <Text style={{ color: color.main, fontFamily: 'Raleway-Medium', fontSize: 18 }}>Нет подключения 😴</Text>
+            return <Text style={{ color: color.main, fontFamily: 'Raleway-Medium', fontSize: 18, textAlign: 'center' }}>Нет подключения 😴</Text>
         }
     }
 

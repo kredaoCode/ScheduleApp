@@ -7,7 +7,7 @@ import {
     } from 'react-native';
 import React, { useContext, useState } from 'react'
 import ChangeFilter from './ChangeFilter';
-import { Context } from '../context';
+import { Context } from '../../context';
 
 export default function Settings() {
     const {color, settings, setSettings} = useContext(Context)

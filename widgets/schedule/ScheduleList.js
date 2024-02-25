@@ -1,7 +1,7 @@
 import { FlatList, StyleSheet, View, Dimensions } from 'react-native'
 import ScheduleDayList from './ScheduleDayList';
 import React, { useContext } from 'react'
-import { Context } from '../context';
+import { Context } from '../../context';
 
 
 export default function ScheduleList() {

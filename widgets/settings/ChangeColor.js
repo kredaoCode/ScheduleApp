@@ -8,10 +8,10 @@ import ColorPicker, {
     SaturationSlider,
     BrightnessSlider,
 } from 'reanimated-color-picker';
-import { Context } from '../context';
+import { Context } from '../../context';
 
 export default function ChangeColor({ setSettings }) {
-    const {color, setColor} = useContext(Context)
+    const {color, setColor, colorTheme} = useContext(Context)
     const [showModal, setShowModal] = useState(false);
 
     const selectedColor = useSharedValue(color.main);
@@ -50,9 +50,9 @@ export default function ChangeColor({ setSettings }) {
                         >
                             <HueSlider style={styles.sliderStyle} />
 
-                            <SaturationSlider style={styles.sliderStyle} reverse />
-
-                            <BrightnessSlider style={styles.sliderStyle} />
+                            {(colorTheme == 'light') ? <BrightnessSlider style={styles.sliderStyle} /> :
+                                <SaturationSlider style={styles.sliderStyle} />
+                            }
                         </ColorPicker>
                     </View>
                 </View>
