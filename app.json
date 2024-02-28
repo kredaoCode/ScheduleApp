@@ -2,7 +2,7 @@
   "expo": {
     "name": "Расписание",
     "slug": "schedule",
-    "version": "0.7.0",
+    "version": "0.8.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
@@ -26,7 +26,7 @@
         "backgroundColor": "#1D1D1D"
       },
       "package": "com.kredao.schedule",
-      "runtimeVersion": "0.7.0"
+      "runtimeVersion": "0.8.0"
     },
     "web": {
       "favicon": "./assets/favicon.png"

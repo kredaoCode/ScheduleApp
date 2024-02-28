@@ -47,7 +47,6 @@ export default function App() {
     const saveData = async () => {
         await AsyncStorage.setItem('id', JSON.stringify(id));
         await AsyncStorage.setItem('color', JSON.stringify(color));
-        //await AsyncStorage.setItem('schedule', JSON.stringify(schedule));
     };
     const getData = async () => {
         const getId = await AsyncStorage.getItem('id');
@@ -58,13 +57,6 @@ export default function App() {
         }
         if (getColor !== null) {
             setColor(JSON.parse(getColor))
-        }
-    };
-    const getOfflineSchedule = async () => {
-        const getSchedule = await AsyncStorage.getItem('schedule');
-
-        if (getSchedule !== null) {
-            setSchedule(JSON.parse(getSchedule))
         }
     };
 
@@ -94,13 +86,11 @@ export default function App() {
                     }
                 } else if (!isConnected || data == null) {
                     setValidation(false);
-                    //getOfflineSchedule();
                 }
             })
             .catch(error => {
-                setValidation(false);
+                setValidation(false)
                 setRefreshing(false);
-                //getOfflineSchedule();
                 console.log('ошибка в catch')
             });
     };
@@ -174,6 +164,5 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         paddingTop: 5,
-        justifyContent: 'center',
     },
 });

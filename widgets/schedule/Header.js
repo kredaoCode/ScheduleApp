@@ -5,7 +5,7 @@ import ChangeColor from '../settings/ChangeColor';
 import { Context } from '../../context';
 
 export default function Header({ date }) {
-    const {color, setSettings, id} = useContext(Context)
+    const { color, setSettings, id } = useContext(Context)
 
     function FormatedDate(date) {
         let today = new Date(date * 1000);
@@ -21,10 +21,13 @@ export default function Header({ date }) {
     return (
         <View>
             <View style={[styles.container, { backgroundColor: color.bgNight }]}>
-                <Text style={{ color: color.main, fontFamily: 'Raleway-Medium' }}>{id.name}, {FormatedDate(date)}</Text>
-                <View style={{ flexDirection: 'row', alignItems: 'center'}}>
-                    <ChangeColor setSettings={setSettings} />
-                    <TouchableOpacity onPress={() => setSettings(true)}>
+                <View style={{paddingBottom: 5}}>
+                    <Text style={{ color: color.main + 'A4', fontFamily: 'Raleway-Medium', fontSize: 10 }}>{id.name}</Text>
+                    <Text style={{ color: color.main, fontFamily: 'Raleway-Medium' }}>{FormatedDate(date)}</Text>
+                </View>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <ChangeColor />
+                    <TouchableOpacity style={{ padding: 5, borderRadius: 8 }} onPress={() => setSettings(true)}>
                         <Ionicons name="ellipsis-vertical" size={24} color={color.main} />
                     </TouchableOpacity>
                 </View>
@@ -37,7 +40,7 @@ const styles = StyleSheet.create({
     container: {
         display: 'flex',
         alignItems: 'center',
-        borderRadius: 15,
+        borderRadius: 10,
         padding: 15,
         marginHorizontal: 10,
         marginBottom: 10,

@@ -35,7 +35,7 @@ export default function ScheduleItem({ index, info }) {
 
 const styles = StyleSheet.create({
     container: {
-        borderRadius: 14,
+        borderRadius: 10,
         padding: 10,
         marginBottom: 10,
         marginHorizontal: 10,

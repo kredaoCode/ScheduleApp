@@ -10,7 +10,7 @@ import ColorPicker, {
 } from 'reanimated-color-picker';
 import { Context } from '../../context';
 
-export default function ChangeColor({ setSettings }) {
+export default function ChangeColor() {
     const {color, setColor, colorTheme} = useContext(Context)
     const [showModal, setShowModal] = useState(false);
 
@@ -86,6 +86,8 @@ const styles = StyleSheet.create({
     openButton: {
         borderRadius: 50,
         marginRight: 8,
+        padding: 5,
+        borderRadius: 8
     },
     closeButton: {
         padding: 10,
