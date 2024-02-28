@@ -7,7 +7,7 @@ export default function OfflineStatus() {
 
     return (
         <View style={[styles.container, { backgroundColor: color.main }]}>
-            <Text style={{ color: color.bg, fontFamily: 'Raleway-Medium', fontSize: 18 }}>#Не актуальное расписание#</Text>
+            <Text style={{ color: color.bg, fontFamily: 'Raleway-Medium' || 'Arial', fontSize: 18 }}>#Не актуальное расписание#</Text>
         </View>
     )
 }

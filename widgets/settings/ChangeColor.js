@@ -11,7 +11,7 @@ import ColorPicker, {
 import { Context } from '../../context';
 
 export default function ChangeColor() {
-    const {color, setColor, colorTheme} = useContext(Context)
+    const {color, setColor} = useContext(Context)
     const [showModal, setShowModal] = useState(false);
 
     const selectedColor = useSharedValue(color.main);
@@ -49,10 +49,7 @@ export default function ChangeColor() {
                             boundedThumb
                         >
                             <HueSlider style={styles.sliderStyle} />
-
-                            {(colorTheme == 'light') ? <BrightnessSlider style={styles.sliderStyle} /> :
-                                <SaturationSlider style={styles.sliderStyle} />
-                            }
+                            <SaturationSlider style={styles.sliderStyle} />
                         </ColorPicker>
                     </View>
                 </View>
@@ -66,7 +63,6 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end',
     },
     overlay: {
-        ...StyleSheet.absoluteFillObject,
         backgroundColor: 'transparent',
     },
     pickerContainer: {

@@ -1,6 +1,6 @@
 import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { StyleSheet, View, useColorScheme } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { useState, useEffect, useMemo } from 'react';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
@@ -17,8 +17,6 @@ export default function App() {
 
     const [isSchedule, setIsShedule] = useState(true);
     const [isConnected, setIsConnected] = useState(true);
-
-    const colorTheme = useColorScheme();
 
     const [color, setColor] = useState({
         bg: '#1B1B1B',
@@ -120,31 +118,9 @@ export default function App() {
         saveData()
     }, [id, color])
 
-    useMemo(() => {
-        if (colorTheme == 'light') {
-            setColor(prev => {
-                return {
-                    bg: '#D2D2D2',
-                    bgNight: '#E2E2E2',
-                    bgLight: '#ECECEC',
-                    main: (prev.main !== '#FFFFFF') ? prev.main : '#000000',
-                }
-            })
-        } else if (colorTheme == 'dark') {
-            setColor(prev => {
-                return {
-                    bg: '#1B1B1B',
-                    bgNight: '#222222',
-                    bgLight: '#272727',
-                    main: (prev.main !== '#000000') ? prev.main : '#FFFFFF',
-                }
-            })
-        }
-    }, [colorTheme])
-
     return (
         <Context.Provider value={{
-            color, setColor, isConnected, settings, setSettings, schedule, id, setId, refreshing, onRefresh, isSchedule, colorTheme
+            color, setColor, isConnected, settings, setSettings, schedule, id, setId, refreshing, onRefresh, isSchedule
         }}>
             <SafeAreaProvider>
                 <SafeAreaView style={[styles.container, { backgroundColor: color.bg }]}

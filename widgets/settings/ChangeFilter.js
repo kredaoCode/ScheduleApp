@@ -48,7 +48,7 @@ export default function ChangeFilter() {
     return (
         <View>
             <View style={styles.heading}>
-                <Text style={{ color: color.main, fontSize: 20, fontFamily: 'Raleway-Medium' }}>Настройки</Text>
+                <Text style={{ color: color.main, fontSize: 20, fontFamily: 'Raleway-Medium'}}>Настройки</Text>
                 <TouchableOpacity onPress={() => setSettings(false)}>
                     <AntDesign name="close" size={24} color={color.main} />
                 </TouchableOpacity>
@@ -82,7 +82,7 @@ export default function ChangeFilter() {
             {(!loading) ?
                 <>
                     <TextInput
-                        style={[styles.input, { borderColor: color.main, color: color.main, fontFamily: 'Raleway-Regular' }]}
+                        style={[styles.input, { borderColor: color.main, color: color.main, fontFamily: 'Raleway-Regular'}]}
                         placeholder={'Группа or Преподаватель'}
                         placeholderTextColor={color.main + '85'}
                         value={input}

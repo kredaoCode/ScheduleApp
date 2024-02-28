@@ -22,8 +22,8 @@ export default function Header({ date }) {
         <View>
             <View style={[styles.container, { backgroundColor: color.bgNight }]}>
                 <View style={{paddingBottom: 5}}>
-                    <Text style={{ color: color.main + 'A4', fontFamily: 'Raleway-Medium', fontSize: 10 }}>{id.name}</Text>
-                    <Text style={{ color: color.main, fontFamily: 'Raleway-Medium' }}>{FormatedDate(date)}</Text>
+                    <Text style={{ color: color.main + 'A4', fontFamily: 'Raleway-Medium' || 'Arial', fontSize: 10 }}>{id.name}</Text>
+                    <Text style={{ color: color.main, fontFamily: 'Raleway-Medium' || 'Arial' }}>{FormatedDate(date)}</Text>
                 </View>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <ChangeColor />

@@ -57,18 +57,18 @@ const styles = StyleSheet.create({
     },
     teacherText: {
         fontSize: 16,
-        fontFamily: 'Raleway-Regular'
+        fontFamily: 'Raleway-Regular' || 'Arial',
     },
     locationText: {
         fontSize: 16,
-        fontFamily: 'Raleway-Regular'
+        fontFamily: 'Raleway-Regular' || 'Arial',
     },
     typeText: {
         marginHorizontal: 5,
-        fontFamily: 'Raleway-Regular'
+        fontFamily: 'Raleway-Regular' || 'Arial'
     },
     nameText: {
-        fontFamily: 'Raleway-Medium',
+        fontFamily: 'Raleway-Medium' || 'Arial',
         fontSize: 16,
         marginVertical: 8,
     },
