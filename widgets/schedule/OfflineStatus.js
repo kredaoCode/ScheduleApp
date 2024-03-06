@@ -3,11 +3,11 @@ import React, { useContext } from 'react'
 import { Context } from '../../context'
 
 export default function OfflineStatus() {
-    const { color } = useContext(Context);
+    const { colorTheme } = useContext(Context);
 
     return (
-        <View style={[styles.container, { backgroundColor: color.main }]}>
-            <Text style={{ color: color.bg, fontFamily: 'Raleway-Medium' || 'Arial', fontSize: 18 }}>#Не актуальное расписание#</Text>
+        <View style={[styles.container, { backgroundColor: colorTheme.main }]}>
+            <Text style={{ color: colorTheme.bg, fontFamily: 'Raleway-Medium' || 'Arial', fontSize: 18 }}>#Не актуальное расписание#</Text>
         </View>
     )
 }

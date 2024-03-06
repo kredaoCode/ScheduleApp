@@ -4,25 +4,25 @@ import React, { useContext } from 'react'
 import { Context } from '../../context';
 
 export default function ScheduleItem({ index, info }) {
-    const { color } = useContext(Context);
+    const { colorTheme } = useContext(Context);
 
     return (
-        <View style={[styles.container, { backgroundColor: color.bgNight }]}>
+        <View style={[styles.container, { backgroundColor: colorTheme.bgNight }]}>
             {info.map((item, index) =>
                 <View style={{ marginVertical: 5 }} key={`${item.name}_${index}`}>
                     <View style={styles.header}>
                         {item.type == "Лекция" ?
-                            <Ionicons name="school" size={16} color={color.main + 'A4'} /> :
-                            <SimpleLineIcons name="chemistry" size={16} color={color.main + 'A4'} />}
-                        <Text style={[styles.typeText, { color: color.main + 'A4' }]}>{item.type}</Text>
-                        <Text style={{ color: color.main + 'A4', fontFamily: 'Raleway-Regular' }}>{item.time}</Text>
+                            <Ionicons name="school" size={16} color={colorTheme.main + 'A4'} /> :
+                            <SimpleLineIcons name="chemistry" size={16} color={colorTheme.main + 'A4'} />}
+                        <Text style={[styles.typeText, { color: colorTheme.main + 'A4' }]}>{item.type}</Text>
+                        <Text style={{ color: colorTheme.main + 'A4', fontFamily: 'Raleway-Regular' }}>{item.time}</Text>
                     </View>
-                    <Text style={[styles.nameText, { color: color.main }]}>{item.name}</Text>
-                    <View style={[styles.teacherContainer, { backgroundColor: color.bgLight }]}>
-                        <Text style={[styles.teacherText, { color: color.main }]}>{(item.teacher || item.group)}</Text>
+                    <Text style={[styles.nameText, { color: colorTheme.main }]}>{item.name}</Text>
+                    <View style={[styles.teacherContainer, { backgroundColor: colorTheme.bgLight }]}>
+                        <Text style={[styles.teacherText, { color: colorTheme.main }]}>{(item.teacher || item.group)}</Text>
                         {(item.location !== null) ?
                             <View style={styles.locationContainer}>
-                                <Text style={[styles.locationText, { color: color.main }]}>{item.location}</Text>
+                                <Text style={[styles.locationText, { color: colorTheme.main }]}>{item.location}</Text>
                             </View> :
                             undefined}
                     </View>

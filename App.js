@@ -14,54 +14,49 @@ import Indicator from './widgets/Indicator';
 SplashScreen.preventAutoHideAsync();
 
 export default function App() {
-
-    const [isSchedule, setIsShedule] = useState(true);
+    const [isSchedule, setIsSchedule] = useState(true);
     const [isConnected, setIsConnected] = useState(true);
-
-    const [color, setColor] = useState({
+    const [colorTheme, setColorTheme] = useState({
         bg: '#1B1B1B',
         bgNight: '#222222',
         bgLight: '#272727',
         main: '#FFFFFF',
     });
-    const [validation, setValidation] = useState(false);
-    const [settings, setSettings] = useState(false);
-    const [schedule, setSchedule] = useState({});
-    const [id, setId] = useState({
+    const [isValidSchedule, setIsValidSchedule] = useState(true);
+    const [showSettings, setShowSettings] = useState(false);
+    const [fetchedSchedule, setFetchedSchedule] = useState({});
+    const [deviceId, setDeviceId] = useState({
         id: 236,
         type: 'group',
         name: 'ИСР-12',
     });
-
-    const [refreshing, setRefreshing] = useState(false);
-
-
+    const [isRefreshing, setIsRefreshing] = useState(false);
 
     const onRefresh = () => {
-        setRefreshing(true);
+        setIsRefreshing(true);
         loadSchedule();
     };
 
     const saveData = async () => {
-        await AsyncStorage.setItem('id', JSON.stringify(id));
-        await AsyncStorage.setItem('color', JSON.stringify(color));
+        await AsyncStorage.setItem('deviceId', JSON.stringify(deviceId));
+        await AsyncStorage.setItem('colorTheme', JSON.stringify(colorTheme));
     };
+
     const getData = async () => {
-        const getId = await AsyncStorage.getItem('id');
-        const getColor = await AsyncStorage.getItem('color');
+        const storedDeviceId = await AsyncStorage.getItem('deviceId');
+        const storedColorTheme = await AsyncStorage.getItem('colorTheme');
 
-        if (getId !== null) {
-            setId(JSON.parse(getId))
+        if (storedDeviceId !== null) {
+            setDeviceId(JSON.parse(storedDeviceId));
         }
-        if (getColor !== null) {
-            setColor(JSON.parse(getColor))
+        if (storedColorTheme !== null) {
+            setColorTheme(JSON.parse(storedColorTheme));
         }
     };
-
 
     const loadSchedule = () => {
-        setValidation(false)
-        fetch(`https://schedule-backend-production.koka.team/v1/schedule?${id.type}_id=${id.id}&is_new=true`)
+        setIsValidSchedule(false);
+        fetch(`https://schedule-backend-production.koka.team/v1/schedule?${deviceId.type}_id=${deviceId.id}&is_new=true`)
             .then(response => {
                 if (response.ok) {
                     return response.json();
@@ -71,25 +66,23 @@ export default function App() {
             })
             .then(data => {
                 if (data !== null && isConnected) {
-                    const parsedSchedule = {};
-                    Object.assign(parsedSchedule, data.schedule);
-                    setSchedule(parsedSchedule);
-                    setRefreshing(false);
+                    const parsedSchedule = { ...data.schedule };
+                    setFetchedSchedule(parsedSchedule);
+                    setIsRefreshing(false);
                     if (Object.keys(parsedSchedule).length > 0) {
-                        setValidation(true);
-                        setIsShedule(true)
+                        setIsValidSchedule(true);
+                        setIsSchedule(true);
                     } else {
-                        setValidation(false)
-                        setIsShedule(false);
+                        setIsValidSchedule(false);
+                        setIsSchedule(false);
                     }
                 } else if (!isConnected || data == null) {
-                    setValidation(false);
+                    setIsValidSchedule(false);
                 }
             })
             .catch(error => {
-                setValidation(false)
-                setRefreshing(false);
-                console.log('ошибка в catch')
+                setIsValidSchedule(false);
+                setIsRefreshing(false);
             });
     };
 
@@ -104,29 +97,42 @@ export default function App() {
     }, []);
 
     useMemo(() => {
-        if (id.id !== undefined && isConnected) {
-            SplashScreen.hideAsync()
-            loadSchedule()
+        if (deviceId.id !== undefined && isConnected) {
+            SplashScreen.hideAsync();
+            loadSchedule();
         }
-    }, [isConnected, id])
+    }, [isConnected, deviceId]);
 
     useMemo(() => {
         getData();
-    }, [])
+    }, []);
 
     useMemo(() => {
-        saveData()
-    }, [id, color])
+        saveData();
+    }, [deviceId, colorTheme]);
 
     return (
-        <Context.Provider value={{
-            color, setColor, isConnected, settings, setSettings, schedule, id, setId, refreshing, onRefresh, isSchedule
-        }}>
+        <Context.Provider
+            value={{
+                colorTheme,
+                setColorTheme,
+                isConnected,
+                showSettings,
+                setShowSettings,
+                fetchedSchedule,
+                deviceId,
+                setDeviceId,
+                isRefreshing,
+                onRefresh,
+                isSchedule,
+            }}
+        >
             <SafeAreaProvider>
-                <SafeAreaView style={[styles.container, { backgroundColor: color.bg }]}
+                <SafeAreaView
+                    style={[styles.container, { backgroundColor: colorTheme.bg }]}
                     edges={['bottom', 'top', 'left', 'right']}
                 >
-                    {(color.bg !== undefined && validation) ? <ScheduleList /> : <Indicator />}
+                    {colorTheme.bg !== undefined && isValidSchedule ? <ScheduleList /> : <Indicator />}
                     <Settings />
                     <StatusBar style="light" />
                 </SafeAreaView>

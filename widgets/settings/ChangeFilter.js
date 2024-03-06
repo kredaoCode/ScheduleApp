@@ -14,43 +14,52 @@ import { Context } from '../../context';
 import SegmentedControl from '@react-native-segmented-control/segmented-control'
 
 export default function ChangeFilter() {
-    const [selectedIndex, setSelectedIndex] = useState(1)
-    const {setSettings, color} = useContext(Context)
+    const [selectedIndex, setSelectedIndex] = useState(1);
+    const { setShowSettings, colorTheme } = useContext(Context);
     const [changeId, setChangeId] = useState();
     const [loading, setLoading] = useState(false);
     const [input, setInput] = useState('');
     const [type, setType] = useState('');
 
-    function loadGroup() {
-        fetch(`https://schedule-backend-production.koka.team/v1/groups`)
+    function fetchData(url, target, targetType) {
+        fetch(url)
             .then(response => response.json())
             .then(response => {
-                setChangeId(response.groups);
-                setType('group');
+                setChangeId(response[target]);
+                setType(targetType);
                 setLoading(false);
-            })
+            });
     }
+
+    function loadGroup() {
+        fetchData('https://schedule-backend-production.koka.team/v1/groups', 'groups', 'group');
+    }
+
     function loadTeachers() {
-        fetch(`https://schedule-backend-production.koka.team/v1/teachers`)
-            .then(response => response.json())
-            .then(response => {
-                setChangeId(response.teachers);
-                setType('teacher');
-                setLoading(false);
-            })
+        fetchData('https://schedule-backend-production.koka.team/v1/teachers', 'teachers', 'teacher');
     }
 
     useEffect(() => {
         loadGroup();
-    }, [])
+    }, []);
 
+    const handleSegmentChange = (event) => {
+        const selectedSegmentIndex = event.nativeEvent.selectedSegmentIndex;
+        if (selectedSegmentIndex === 0) {
+            loadTeachers();
+        } else if (selectedSegmentIndex === 1) {
+            loadGroup();
+        }
+        setSelectedIndex(selectedSegmentIndex);
+        setLoading(true);
+    };
 
     return (
         <View>
             <View style={styles.heading}>
-                <Text style={{ color: color.main, fontSize: 20, fontFamily: 'Raleway-Medium'}}>Настройки</Text>
+                <Text style={{ color: colorTheme.main, fontSize: 20, fontFamily: 'Raleway-Medium'}}>Настройки</Text>
                 <TouchableOpacity onPress={() => setSettings(false)}>
-                    <AntDesign name="close" size={24} color={color.main} />
+                    <AntDesign name="close" size={24} color={colorTheme.main} />
                 </TouchableOpacity>
             </View>
             <View>
@@ -58,23 +67,15 @@ export default function ChangeFilter() {
                     style={styles.segmented}
                     values={["Преподаватель", "Группа"]}
                     selectedIndex={selectedIndex}
-                    onChange={(event) => {
-                        if (event.nativeEvent.selectedSegmentIndex == 0) {
-                            loadTeachers()
-                        } else if (event.nativeEvent.selectedSegmentIndex == 1) {
-                            loadGroup()
-                        }
-                        setSelectedIndex(event.nativeEvent.selectedSegmentIndex)
-                        setLoading(true);
-                    }}
-                    tintColor={color.main}
-                    backgroundColor={color.bgLight}
+                    onChange={handleSegmentChange}
+                    tintColor={colorTheme.main}
+                    backgroundColor={colorTheme.bgLight}
                     fontStyle={{
-                        color: color.main,
+                        color: colorTheme.main,
                         fontFamily: 'Raleway-Medium'
                     }}
                     activeFontStyle={{
-                        color: color.bg,
+                        color: colorTheme.bg,
                         fontFamily: 'Raleway-Regular'
                     }}
                 />
@@ -82,13 +83,13 @@ export default function ChangeFilter() {
             {(!loading) ?
                 <>
                     <TextInput
-                        style={[styles.input, { borderColor: color.main, color: color.main, fontFamily: 'Raleway-Regular'}]}
+                        style={[styles.input, { borderColor: colorTheme.main, color: colorTheme.main, fontFamily: 'Raleway-Regular'}]}
                         placeholder={'Группа or Преподаватель'}
-                        placeholderTextColor={color.main + '85'}
+                        placeholderTextColor={colorTheme.main + '85'}
                         value={input}
                         onChangeText={setInput}
                     />
-                    {(input != '') ?
+                    {(input !== '') ?
                         <FlatList
                             style={styles.list}
                             data={changeId.filter(item => item.name.toLowerCase().includes(input.toLowerCase()))}
@@ -100,9 +101,9 @@ export default function ChangeFilter() {
                         />
                         : <></>}
                 </>
-                : <><ActivityIndicator style={{ marginTop: 10 }} size={'large'} color={color.main} /></>}
+                : <><ActivityIndicator style={{ marginTop: 10 }} size={'large'} color={colorTheme.main} /></>}
         </View>
-    )
+    );
 }
 
 const styles = StyleSheet.create({

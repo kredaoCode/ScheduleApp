@@ -1,27 +1,20 @@
-import {
-        StyleSheet, 
-        Modal, 
-        Dimensions, 
-        Switch,
-        View,
-    } from 'react-native';
-import React, { useContext, useState } from 'react'
+import { StyleSheet, Modal, Dimensions, View} from 'react-native';
+import React, { useContext} from 'react'
 import ChangeFilter from './ChangeFilter';
 import { Context } from '../../context';
 
 export default function Settings() {
-    const {color, settings, setSettings} = useContext(Context)
-
+    const {colorTheme, showSettings, setShowSettings} = useContext(Context)
     return (
         <Modal 
             style={styles.container}
             animationType="fade"
-            visible={settings}
+            visible={showSettings}
             onRequestClose={() => {
-                setSettings(prev => !prev)
+                setShowSettings(prev => !prev)
             }}
             >
-            <View style={[styles.item, {backgroundColor: color.bg}]}>
+            <View style={[styles.item, {backgroundColor: colorTheme.bg}]}>
                 <ChangeFilter />
             </View>
         </Modal>

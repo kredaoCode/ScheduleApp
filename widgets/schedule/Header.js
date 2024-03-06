@@ -1,40 +1,41 @@
+import React, { useContext } from 'react'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { Ionicons } from '@expo/vector-icons';
-import React, { useContext } from 'react'
 import ChangeColor from '../settings/ChangeColor';
 import { Context } from '../../context';
 
-export default function Header({ date }) {
-    const { color, setSettings, id } = useContext(Context)
+const Header = ({ date }) => {
+    const { colorTheme, setShowSettings, deviceId } = useContext(Context);
 
-    function FormatedDate(date) {
-        let today = new Date(date * 1000);
-
-        const list = ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'];
+    const formatDate = (date) => {
+        const today = new Date(date * 1000);
+        const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
         const dayIndex = today.getDay();
-        const month = (today.getMonth() > 9) ? today.getMonth() + 1 : `0${today.getMonth() + 1}`
+        const month = (today.getMonth() > 9) ? today.getMonth() + 1 : `0${today.getMonth() + 1}`;
         const day = (today.getDate() > 9) ? today.getDate() : `0${today.getDate()}`;
 
-        return `${list[dayIndex]}, ${day}.${month}.${today.getFullYear()}`
-    }
+        return `${daysOfWeek[dayIndex]}, ${day}.${month}.${today.getFullYear()}`;
+    };
 
     return (
         <View>
-            <View style={[styles.container, { backgroundColor: color.bgNight }]}>
-                <View style={{paddingBottom: 5}}>
-                    <Text style={{ color: color.main + 'A4', fontFamily: 'Raleway-Medium' || 'Arial', fontSize: 10 }}>{id.name}</Text>
-                    <Text style={{ color: color.main, fontFamily: 'Raleway-Medium' || 'Arial' }}>{FormatedDate(date)}</Text>
+            <View style={[styles.container, { backgroundColor: colorTheme.bgNight }]}>
+                <View style={{ paddingBottom: 5 }}>
+                    <Text style={{ color: `${colorTheme.main}A4`, fontFamily: 'Raleway-Medium' || 'Arial', fontSize: 10 }}>{deviceId.name}</Text>
+                    <Text style={{ color: colorTheme.main, fontFamily: 'Raleway-Medium' || 'Arial' }}>{formatDate(date)}</Text>
                 </View>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <ChangeColor />
-                    <TouchableOpacity style={{ padding: 5, borderRadius: 8 }} onPress={() => setSettings(true)}>
-                        <Ionicons name="ellipsis-vertical" size={24} color={color.main} />
+                    <TouchableOpacity style={{ padding: 5, borderRadius: 8 }} onPress={() => setShowSettings(true)}>
+                        <Ionicons name="ellipsis-vertical" size={24} color={colorTheme.main} />
                     </TouchableOpacity>
                 </View>
             </View>
         </View>
-    )
-}
+    );
+};
+
+export default Header;
 
 const styles = StyleSheet.create({
     container: {

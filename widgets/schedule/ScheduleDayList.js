@@ -6,7 +6,7 @@ import OfflineStatus from './OfflineStatus';
 import { Context } from '../../context';
 
 export default function SchuduleList({ scheduleItem }) {
-    const {isConnected, color, onRefresh, refreshing} = useContext(Context);
+    const {isConnected, colorTheme, onRefresh, isRefreshing} = useContext(Context);
 
     return (
         <View style={styles.container}>
@@ -22,10 +22,10 @@ export default function SchuduleList({ scheduleItem }) {
                         renderItem={({ item, index }) => <ScheduleItem index={index} info={item} />}
                         refreshControl={
                             <RefreshControl
-                                refreshing={refreshing}
+                                refreshing={isRefreshing}
                                 onRefresh={onRefresh}
-                                colors={[color.main, color.bg]}
-                                progressBackgroundColor={color.bg}
+                                colors={[colorTheme.main, colorTheme.bg]}
+                                progressBackgroundColor={colorTheme.bg}
                             />}
                     />
                 </>
@@ -39,7 +39,4 @@ const styles = StyleSheet.create({
         marginBottom: 15,
         width: Dimensions.get('window').width,
     },
-    header: {
-
-    }
 })

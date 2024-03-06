@@ -5,7 +5,7 @@
     "version": "0.8.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "automatic",
+    "userInterfaceStyle": "dark",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -15,18 +15,19 @@
       "**/*"
     ],
     "ios": {
+      "userInterfaceStyle": "dark",
       "supportsTablet": true,
       "runtimeVersion": {
         "policy": "appVersion"
       }
     },
     "android": {
+      "userInterfaceStyle": "dark",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#1D1D1D"
       },
-      "package": "com.kredao.schedule",
-      "runtimeVersion": "0.8.0"
+      "package": "com.kredao.schedule"
     },
     "web": {
       "favicon": "./assets/favicon.png"
