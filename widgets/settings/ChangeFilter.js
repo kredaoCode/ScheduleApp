@@ -15,7 +15,7 @@ import SegmentedControl from '@react-native-segmented-control/segmented-control'
 
 export default function ChangeFilter() {
     const [selectedIndex, setSelectedIndex] = useState(1);
-    const { setShowSettings, colorTheme } = useContext(Context);
+    const { setShowSettings, user } = useContext(Context);
     const [changeId, setChangeId] = useState();
     const [loading, setLoading] = useState(false);
     const [input, setInput] = useState('');
@@ -57,9 +57,9 @@ export default function ChangeFilter() {
     return (
         <View>
             <View style={styles.heading}>
-                <Text style={{ color: colorTheme.main, fontSize: 20, fontFamily: 'Raleway-Medium'}}>Настройки</Text>
-                <TouchableOpacity onPress={() => setSettings(false)}>
-                    <AntDesign name="close" size={24} color={colorTheme.main} />
+                <Text style={{ color: user.main, fontSize: 20, fontFamily: 'Raleway-Medium'}}>Настройки</Text>
+                <TouchableOpacity onPress={() => setShowSettings(false)}>
+                    <AntDesign name="close" size={24} color={user.main} />
                 </TouchableOpacity>
             </View>
             <View>
@@ -68,14 +68,14 @@ export default function ChangeFilter() {
                     values={["Преподаватель", "Группа"]}
                     selectedIndex={selectedIndex}
                     onChange={handleSegmentChange}
-                    tintColor={colorTheme.main}
-                    backgroundColor={colorTheme.bgLight}
+                    tintColor={user.main}
+                    backgroundColor={user.bgLight}
                     fontStyle={{
-                        color: colorTheme.main,
+                        color: user.main,
                         fontFamily: 'Raleway-Medium'
                     }}
                     activeFontStyle={{
-                        color: colorTheme.bg,
+                        color: user.bg,
                         fontFamily: 'Raleway-Regular'
                     }}
                 />
@@ -83,9 +83,9 @@ export default function ChangeFilter() {
             {(!loading) ?
                 <>
                     <TextInput
-                        style={[styles.input, { borderColor: colorTheme.main, color: colorTheme.main, fontFamily: 'Raleway-Regular'}]}
+                        style={[styles.input, { borderColor: user.main, color: user.main, fontFamily: 'Raleway-Regular'}]}
                         placeholder={'Группа or Преподаватель'}
-                        placeholderTextColor={colorTheme.main + '85'}
+                        placeholderTextColor={user.main + '85'}
                         value={input}
                         onChangeText={setInput}
                     />
@@ -101,7 +101,7 @@ export default function ChangeFilter() {
                         />
                         : <></>}
                 </>
-                : <><ActivityIndicator style={{ marginTop: 10 }} size={'large'} color={colorTheme.main} /></>}
+                : <><ActivityIndicator style={{ marginTop: 10 }} size={'large'} color={user.main} /></>}
         </View>
     );
 }

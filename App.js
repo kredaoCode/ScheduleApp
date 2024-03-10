@@ -14,49 +14,46 @@ import Indicator from './widgets/Indicator';
 SplashScreen.preventAutoHideAsync();
 
 export default function App() {
-    const [isSchedule, setIsSchedule] = useState(true);
-    const [isConnected, setIsConnected] = useState(true);
-    const [colorTheme, setColorTheme] = useState({
-        bg: '#1B1B1B',
-        bgNight: '#222222',
-        bgLight: '#272727',
+    const [isConnected, setIsConnected] = useState(true);// состояние сети 
+    const [user, setUser] = useState({
+        // параметры цвета
+        bg: '#161616',
+        bgNight: '#1d1c1c',
+        bgLight: '#232323',
         main: '#FFFFFF',
-    });
-    const [isValidSchedule, setIsValidSchedule] = useState(true);
-    const [showSettings, setShowSettings] = useState(false);
-    const [fetchedSchedule, setFetchedSchedule] = useState({});
-    const [deviceId, setDeviceId] = useState({
+        // Параметры расписания
         id: 236,
         type: 'group',
         name: 'ИСР-12',
-    });
+    })
+    const [isLoadSchedule, setIsLoadSchedule] = useState(true);
+    const [showSettings, setShowSettings] = useState(false);
+    const [fetchedSchedule, setFetchedSchedule] = useState(undefined);
     const [isRefreshing, setIsRefreshing] = useState(false);
 
+    // Функция рефреша
     const onRefresh = () => {
         setIsRefreshing(true);
         loadSchedule();
     };
 
+    // функция сохранение данных пользователья, вызывается при каждом изменении состояния user
     const saveData = async () => {
-        await AsyncStorage.setItem('deviceId', JSON.stringify(deviceId));
-        await AsyncStorage.setItem('colorTheme', JSON.stringify(colorTheme));
+        await AsyncStorage.setItem('user', JSON.stringify(user));
     };
 
+    // функция загрузки данных пользователя, вызывается один раз в начале жизненого цикла
     const getData = async () => {
-        const storedDeviceId = await AsyncStorage.getItem('deviceId');
-        const storedColorTheme = await AsyncStorage.getItem('colorTheme');
+        const storedUser = await AsyncStorage.getItem('user');
 
-        if (storedDeviceId !== null) {
-            setDeviceId(JSON.parse(storedDeviceId));
-        }
-        if (storedColorTheme !== null) {
-            setColorTheme(JSON.parse(storedColorTheme));
+        if (storedUser !== null) {
+            setUser(JSON.parse(storedUser));
         }
     };
 
     const loadSchedule = () => {
-        setIsValidSchedule(false);
-        fetch(`https://schedule-backend-production.koka.team/v1/schedule?${deviceId.type}_id=${deviceId.id}&is_new=true`)
+        setFetchedSchedule(undefined)
+        fetch(`https://schedule-backend-production.koka.team/v1/schedule?${user.type}_id=${user.id}&is_new=true`)
             .then(response => {
                 if (response.ok) {
                     return response.json();
@@ -67,26 +64,26 @@ export default function App() {
             .then(data => {
                 if (data !== null && isConnected) {
                     const parsedSchedule = { ...data.schedule };
-                    setFetchedSchedule(parsedSchedule);
-                    setIsRefreshing(false);
+
                     if (Object.keys(parsedSchedule).length > 0) {
-                        setIsValidSchedule(true);
-                        setIsSchedule(true);
+                        setFetchedSchedule(parsedSchedule);
+                        setIsLoadSchedule(false)
                     } else {
-                        setIsValidSchedule(false);
-                        setIsSchedule(false);
+                        setFetchedSchedule(null);
                     }
+                    setIsRefreshing(false);
                 } else if (!isConnected || data == null) {
-                    setIsValidSchedule(false);
+                    setFetchedSchedule(null);
                 }
             })
             .catch(error => {
-                setIsValidSchedule(false);
+                setFetchedSchedule(null);
                 setIsRefreshing(false);
             });
     };
 
     useEffect(() => {
+        // для управления состоянием подключения к сети
         const unsubscribe = NetInfo.addEventListener(state => {
             setIsConnected(state.isConnected);
         });
@@ -97,42 +94,40 @@ export default function App() {
     }, []);
 
     useMemo(() => {
-        if (deviceId.id !== undefined && isConnected) {
+        if (!showSettings && isConnected && isLoadSchedule) {
             SplashScreen.hideAsync();
             loadSchedule();
         }
-    }, [isConnected, deviceId]);
+        if (typeof fetchedSchedule == "object") {
+            saveData();
+        }
+    }, [user])
 
     useMemo(() => {
         getData();
     }, []);
 
-    useMemo(() => {
-        saveData();
-    }, [deviceId, colorTheme]);
-
     return (
         <Context.Provider
             value={{
-                colorTheme,
-                setColorTheme,
+                user,
+                setUser,
                 isConnected,
                 showSettings,
                 setShowSettings,
                 fetchedSchedule,
-                deviceId,
-                setDeviceId,
                 isRefreshing,
                 onRefresh,
-                isSchedule,
+                setIsLoadSchedule
             }}
         >
+
             <SafeAreaProvider>
                 <SafeAreaView
-                    style={[styles.container, { backgroundColor: colorTheme.bg }]}
+                    style={[styles.container, { backgroundColor: user.bg }]}
                     edges={['bottom', 'top', 'left', 'right']}
                 >
-                    {colorTheme.bg !== undefined && isValidSchedule ? <ScheduleList /> : <Indicator />}
+                    {user.bg !== undefined && typeof fetchedSchedule == "object" ? <ScheduleList /> : <Indicator />}
                     <Settings />
                     <StatusBar style="light" />
                 </SafeAreaView>

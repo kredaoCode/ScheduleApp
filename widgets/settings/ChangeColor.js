@@ -11,21 +11,23 @@ import ColorPicker, {
 import { Context } from '../../context';
 
 export default function ChangeColor() {
-    const {colorTheme, setColorTheme} = useContext(Context)
+    const {user, setUser} = useContext(Context)
     const [showModal, setShowModal] = useState(false);
 
-    const selectedColor = useSharedValue(colorTheme.main);
+    const selectedColor = useSharedValue(user.main);
 
     const onColorSelect = (color) => {
-        setColor(prev => {
-            return { ...prev, main: colorTheme.hex }
+        setUser(prev => {
+            return { ...prev, main: color.hex }
         })
     };
+
+    // Компонент выбора цвета
 
     return (
         <View>
             <TouchableOpacity style={styles.openButton} onPress={() => setShowModal(true)}>
-                <MaterialIcons name="color-lens" size={24} color={colorTheme.main} />
+                <MaterialIcons name="color-lens" size={24} color={user.main} />
             </TouchableOpacity>
 
             <Modal
@@ -39,7 +41,7 @@ export default function ChangeColor() {
                         style={styles.overlay}
                         onPress={() => setShowModal(false)}
                     />
-                    <View style={[styles.pickerContainer, { backgroundColor: colorTheme.bgLight }]}>
+                    <View style={[styles.pickerContainer, { backgroundColor: user.bgLight }]}>
                         <ColorPicker
                             value={selectedColor.value}
                             sliderThickness={25}

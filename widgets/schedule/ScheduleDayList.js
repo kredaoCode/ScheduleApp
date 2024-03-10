@@ -6,9 +6,12 @@ import OfflineStatus from './OfflineStatus';
 import { Context } from '../../context';
 
 export default function SchuduleList({ scheduleItem }) {
-    const {isConnected, colorTheme, onRefresh, isRefreshing} = useContext(Context);
+    const {isConnected, user, onRefresh, isRefreshing} = useContext(Context);
 
     return (
+        
+        // Компонент с самим расписанием занятий за один день
+
         <View style={styles.container}>
             {(scheduleItem) ?
                 <>
@@ -24,8 +27,8 @@ export default function SchuduleList({ scheduleItem }) {
                             <RefreshControl
                                 refreshing={isRefreshing}
                                 onRefresh={onRefresh}
-                                colors={[colorTheme.main, colorTheme.bg]}
-                                progressBackgroundColor={colorTheme.bg}
+                                colors={[user.main, user.bg]}
+                                progressBackgroundColor={user.bg}
                             />}
                     />
                 </>

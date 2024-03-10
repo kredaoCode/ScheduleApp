@@ -3,31 +3,33 @@ import React, { useContext } from 'react'
 import { Context } from '../context';
 import { MaterialIcons } from '@expo/vector-icons';
 
+// Предназначен для обработки различных ошибок
+
 export default function Indicator() {
-    const { isConnected, colorTheme, isSchedule, setSettings } = useContext(Context);
+    const { isConnected, user, fetchedSchedule, setShowSettings } = useContext(Context);
 
     function renderIndicator() {
         if (isConnected) {
-            if (isSchedule) {
+            if (fetchedSchedule == undefined) {
                 return (
-                    <ActivityIndicator style={{ marginTop: 10 }} size={'large'} color={colorTheme.main} />
+                    <ActivityIndicator style={{ marginTop: 10 }} size={'large'} color={user.main} />
                 );
-            } else {
+            } else if (fetchedSchedule == null) {
                 return (
                     <View style={{ alignItems: 'center' }}>
-                        <MaterialIcons name="not-interested" size={64} color={colorTheme.bgLight} />
-                        <Text style={{ color: colorTheme.bgLight, fontFamily: 'Raleway-Medium', fontSize: 18 }}>Отсутствует расписание</Text>
-                        <TouchableOpacity style={[styles.button, { backgroundColor: colorTheme.bgLight }]} onPress={() => {
-                            setSettings(true);
+                        <MaterialIcons name="not-interested" size={64} color={user.bgLight} />
+                        <Text style={{ color: user.bgLight, fontFamily: 'Raleway-Medium', fontSize: 18 }}>Отсутствует расписание</Text>
+                        <TouchableOpacity style={[styles.button, { backgroundColor: user.bgLight }]} onPress={() => {
+                            setShowSettings(true);
                         }}>
-                            <MaterialIcons name="settings" size={48} color={colorTheme.bg} />
+                            <MaterialIcons name="settings" size={48} color={user.bg} />
                         </TouchableOpacity>
                     </View>
                 );
             }
         } else {
             return (
-                <Text style={{ color: colorTheme.main, fontFamily: 'Raleway-Medium', fontSize: 18, textAlign: 'center' }}>Нет подключения 😴</Text>
+                <Text style={{ color: user.main, fontFamily: 'Raleway-Medium', fontSize: 18, textAlign: 'center' }}>Нет подключения 😴</Text>
             );
         }
     }

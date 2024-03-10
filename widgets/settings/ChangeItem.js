@@ -3,13 +3,16 @@ import React, { useContext } from 'react'
 import { Context } from '../../context'
 
 export default function ChangeItem({ name, id, type}) {
-	const {setDeviceId, colorTheme, setSettings} = useContext(Context);
+	const {setUser, user, setShowSettings, setIsLoadShedule} = useContext(Context);
 	return (
-		<TouchableOpacity style={[styles.button, { backgroundColor: colorTheme.bgLight }]} onPress={() => {
-			setDeviceId({ id: id, type: type, name: name })
+		<TouchableOpacity style={[styles.button, { backgroundColor: user.bgLight }]} onPress={() => {
+			setUser(prev => {
+				return { ...prev, id: id, type: type, name: name }
+			})
+			setIsLoadShedule(true)
 			setShowSettings(prev => !prev);
 		}}>
-			<Text style={{ color: colorTheme.main + 'A4', fontFamily: 'Raleway-Medium' }}>{name}</Text>
+			<Text style={{ color: user.main + 'A4', fontFamily: 'Raleway-Medium' }}>{name}</Text>
 		</TouchableOpacity>
 	)
 }

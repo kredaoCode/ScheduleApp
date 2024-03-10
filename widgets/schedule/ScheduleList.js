@@ -1,13 +1,13 @@
-import { FlatList, StyleSheet, View, Dimensions } from 'react-native'
+import { FlatList, Dimensions } from 'react-native'
 import ScheduleDayList from './ScheduleDayList';
 import React, { useContext } from 'react'
 import { Context } from '../../context';
 
-
 export default function ScheduleList() {
     const {fetchedSchedule} = useContext(Context);
-
+    
     return (
+            // горизонтальный список по дням 
             <FlatList
                 horizontal
                 overScrollMode='never'
@@ -21,5 +21,3 @@ export default function ScheduleList() {
             />
     )
 }
-
-const styles = StyleSheet.create({})

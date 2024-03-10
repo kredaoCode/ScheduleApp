@@ -2,12 +2,14 @@ import { StyleSheet, Text, View } from 'react-native'
 import React, { useContext } from 'react'
 import { Context } from '../../context'
 
+// Показывается в случае отсутствия подключения
+
 export default function OfflineStatus() {
-    const { colorTheme } = useContext(Context);
+    const { user } = useContext(Context);
 
     return (
-        <View style={[styles.container, { backgroundColor: colorTheme.main }]}>
-            <Text style={{ color: colorTheme.bg, fontFamily: 'Raleway-Medium' || 'Arial', fontSize: 18 }}>#Не актуальное расписание#</Text>
+        <View style={[styles.container, { backgroundColor: user.main }]}>
+            <Text style={{ color: user.bg, fontFamily: 'Raleway-Medium' || 'Arial', fontSize: 18 }}>#Не актуальное расписание#</Text>
         </View>
     )
 }

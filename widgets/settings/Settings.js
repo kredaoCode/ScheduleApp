@@ -2,9 +2,13 @@ import { StyleSheet, Modal, Dimensions, View} from 'react-native';
 import React, { useContext} from 'react'
 import ChangeFilter from './ChangeFilter';
 import { Context } from '../../context';
+import { CheckBox } from 'react-native-web';
+import GoToCertificates from './GoToCertificates';
+
+// Модальное окно настроек
 
 export default function Settings() {
-    const {colorTheme, showSettings, setShowSettings} = useContext(Context)
+    const {user, showSettings, setShowSettings} = useContext(Context)
     return (
         <Modal 
             style={styles.container}
@@ -14,8 +18,9 @@ export default function Settings() {
                 setShowSettings(prev => !prev)
             }}
             >
-            <View style={[styles.item, {backgroundColor: colorTheme.bg}]}>
+            <View style={[styles.item, {backgroundColor: user.bg}]}>
                 <ChangeFilter />
+                <GoToCertificates />
             </View>
         </Modal>
     )

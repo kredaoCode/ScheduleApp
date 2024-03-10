@@ -1,32 +1,34 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { Ionicons, SimpleLineIcons } from '@expo/vector-icons';
 import React, { useContext } from 'react'
 import { Context } from '../../context';
 
+// элемент занятия
+
 export default function ScheduleItem({ index, info }) {
-    const { colorTheme } = useContext(Context);
+    const { user } = useContext(Context);
 
     return (
-        <View style={[styles.container, { backgroundColor: colorTheme.bgNight }]}>
+        <View style={[styles.container, { backgroundColor: user.bgNight }]}>
             {info.map((item, index) =>
-                <View style={{ marginVertical: 5 }} key={`${item.name}_${index}`}>
-                    <View style={styles.header}>
-                        {item.type == "Лекция" ?
-                            <Ionicons name="school" size={16} color={colorTheme.main + 'A4'} /> :
-                            <SimpleLineIcons name="chemistry" size={16} color={colorTheme.main + 'A4'} />}
-                        <Text style={[styles.typeText, { color: colorTheme.main + 'A4' }]}>{item.type}</Text>
-                        <Text style={{ color: colorTheme.main + 'A4', fontFamily: 'Raleway-Regular' }}>{item.time}</Text>
+                    <View style={{ marginVertical: 5 }} key={`${item.name}_${index}`}>
+                        <View style={styles.header}>
+                                {item.type == "Лекция" ?
+                                    <Ionicons name="school" size={16} color={user.main + 'A4'} /> :
+                                    <SimpleLineIcons name="chemistry" size={16} color={user.main + 'A4'} />}
+                                <Text style={[styles.typeText, { color: user.main + 'A4' }]}>{item.type}</Text>
+                                <Text style={{ color: user.main + 'A4', fontFamily: 'Raleway-Regular' }}>{item.time}</Text>
+                        </View>
+                        <Text style={[styles.nameText, { color: user.main }]}>{item.name}</Text>
+                        <View style={[styles.teacherContainer, { backgroundColor: user.bgLight }]}>
+                            <Text style={[styles.teacherText, { color: user.main }]}>{(item.teacher || item.group)}</Text>
+                            {(item.location !== null) ?
+                                <View style={styles.locationContainer}>
+                                    <Text style={[styles.locationText, { color: user.main }]}>{item.location}</Text>
+                                </View> :
+                                undefined}
+                        </View>
                     </View>
-                    <Text style={[styles.nameText, { color: colorTheme.main }]}>{item.name}</Text>
-                    <View style={[styles.teacherContainer, { backgroundColor: colorTheme.bgLight }]}>
-                        <Text style={[styles.teacherText, { color: colorTheme.main }]}>{(item.teacher || item.group)}</Text>
-                        {(item.location !== null) ?
-                            <View style={styles.locationContainer}>
-                                <Text style={[styles.locationText, { color: colorTheme.main }]}>{item.location}</Text>
-                            </View> :
-                            undefined}
-                    </View>
-                </View>
             )}
 
         </View>
