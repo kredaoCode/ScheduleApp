@@ -6,25 +6,46 @@ import { MaterialIcons } from '@expo/vector-icons';
 // Предназначен для обработки различных ошибок
 
 export default function Indicator() {
-    const { isConnected, user, fetchedSchedule, setShowSettings } = useContext(Context);
+    const { isConnected, user, fetchedSchedule, setShowSettings, isLoadSchedule } = useContext(Context);
 
     function renderIndicator() {
         if (isConnected) {
-            if (fetchedSchedule == undefined) {
+            if (!isLoadSchedule && fetchedSchedule !== undefined) {
+                if (user.id === undefined) {
+                    return (
+                        <View style={{ alignItems: 'center' }}>
+                            <MaterialIcons name="check" size={64} color={user.main + 'a4'} />
+                            <Text style={[styles.text, { color: user.main + 'a4' }]}>
+                                Выберите группу / преподавателя
+                            </Text>
+                            <TouchableOpacity style={[styles.button, { backgroundColor: user.main + 'a4' }]} onPress={() => {
+                                setShowSettings(true);
+                            }}>
+                                <MaterialIcons name="settings" size={36} color={user.bg} />
+                            </TouchableOpacity>
+                            <Text style={[styles.text, { color: user.main + 'a4', marginVertical: 10, fontSize: 12, opacity: 0.5 }]}>
+                                Спасибо что выбрали нас!❤️
+                            </Text>
+                        </View>
+                    )
+                } else {
+                    return (
+                        <View style={{ alignItems: 'center' }}>
+                            <MaterialIcons name="not-interested" size={64} color={user.main + 'a4'} />
+                            <Text style={[styles.text, { color: user.main + 'a4' }]}>
+                                Кажестся, расписание нет
+                            </Text>
+                            <TouchableOpacity style={[styles.button, { backgroundColor: user.main + 'a4' }]} onPress={() => {
+                                setShowSettings(true);
+                            }}>
+                                <MaterialIcons name="settings" size={36} color={user.bg} />
+                            </TouchableOpacity>
+                        </View>
+                    )
+                }
+            } else {
                 return (
                     <ActivityIndicator style={{ marginTop: 10 }} size={'large'} color={user.main} />
-                );
-            } else if (fetchedSchedule == null) {
-                return (
-                    <View style={{ alignItems: 'center' }}>
-                        <MaterialIcons name="not-interested" size={64} color={user.bgLight} />
-                        <Text style={{ color: user.bgLight, fontFamily: 'Raleway-Medium', fontSize: 18 }}>Отсутствует расписание</Text>
-                        <TouchableOpacity style={[styles.button, { backgroundColor: user.bgLight }]} onPress={() => {
-                            setShowSettings(true);
-                        }}>
-                            <MaterialIcons name="settings" size={48} color={user.bg} />
-                        </TouchableOpacity>
-                    </View>
                 );
             }
         } else {
@@ -43,10 +64,16 @@ export default function Indicator() {
 
 const styles = StyleSheet.create({
     button: {
-        marginTop: 50, 
-        width: '90%', 
+        width: '90%',
         alignItems: "center",
         borderRadius: 10,
         elevation: 5,
+        padding: 6
+    },
+    text: {
+        fontFamily: 'Raleway-Regular',
+        fontSize: 18,
+        marginVertical: 32,
+        textAlign: 'center'
     }
 })

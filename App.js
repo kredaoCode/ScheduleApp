@@ -22,7 +22,7 @@ export default function App() {
         bgLight: '#232323',
         main: '#FFFFFF',
         // Параметры расписания
-        id: 236,
+        id: undefined,
         type: 'group',
         name: 'ИСР-12',
     })
@@ -62,12 +62,13 @@ export default function App() {
                 }
             })
             .then(data => {
+                setIsLoadSchedule(false)
                 if (data !== null && isConnected) {
                     const parsedSchedule = { ...data.schedule };
 
                     if (Object.keys(parsedSchedule).length > 0) {
                         setFetchedSchedule(parsedSchedule);
-                        setIsLoadSchedule(false)
+                        
                     } else {
                         setFetchedSchedule(null);
                     }
@@ -104,7 +105,7 @@ export default function App() {
     }, [user])
 
     useMemo(() => {
-        getData();
+        //getData();
     }, []);
 
     return (
@@ -118,7 +119,8 @@ export default function App() {
                 fetchedSchedule,
                 isRefreshing,
                 onRefresh,
-                setIsLoadSchedule
+                setIsLoadSchedule,
+                isLoadSchedule
             }}
         >
 
@@ -127,7 +129,7 @@ export default function App() {
                     style={[styles.container, { backgroundColor: user.bg }]}
                     edges={['bottom', 'top', 'left', 'right']}
                 >
-                    {user.bg !== undefined && typeof fetchedSchedule == "object" ? <ScheduleList /> : <Indicator />}
+                    {fetchedSchedule !== undefined && fetchedSchedule !== null ? <ScheduleList /> : <Indicator />}
                     <Settings />
                     <StatusBar style="light" />
                 </SafeAreaView>

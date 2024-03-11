@@ -9,9 +9,9 @@ import {
 } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import React, { useContext, useEffect, useState } from 'react'
-import ChangeItem from './ChangeItem';
 import { Context } from '../../context';
 import SegmentedControl from '@react-native-segmented-control/segmented-control'
+import ChangeItemFillter from './ChangeItemFillter';
 
 export default function ChangeFilter() {
     const [selectedIndex, setSelectedIndex] = useState(1);
@@ -93,7 +93,7 @@ export default function ChangeFilter() {
                         <FlatList
                             style={styles.list}
                             data={changeId.filter(item => item.name.toLowerCase().includes(input.toLowerCase()))}
-                            renderItem={({ item }) => <ChangeItem
+                            renderItem={({ item }) => <ChangeItemFillter
                                 name={item.name}
                                 id={item.id}
                                 type={type}
