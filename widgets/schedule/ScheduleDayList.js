@@ -5,7 +5,7 @@ import Header from './Header';
 import OfflineStatus from './OfflineStatus';
 import { Context } from '../../context';
 
-export default function SchuduleList({ scheduleItem }) {
+export default function ScheduleDayList({ scheduleItem }) {
     const {isConnected, user, onRefresh, isRefreshing} = useContext(Context);
 
     return (

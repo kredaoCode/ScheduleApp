@@ -10,7 +10,9 @@ export default function Indicator() {
 
     function renderIndicator() {
         if (isConnected) {
-            if (!isLoadSchedule && fetchedSchedule === null) {
+            if (!isLoadSchedule && fetchedSchedule == null) {
+
+                // Проверка на то что приложение осуществило первый запуск
                 if (user.id === undefined) {
                     return (
                         <View style={{ alignItems: 'center' }}>
@@ -29,7 +31,6 @@ export default function Indicator() {
                         </View>
                     )
                 } else {
-                    console.log('нет расписания!!!')
                     return (
                         <View style={{ alignItems: 'center' }}>
                             <MaterialIcons name="not-interested" size={64} color={user.main + 'a4'} />
@@ -46,11 +47,13 @@ export default function Indicator() {
                 }
             } else {
                 return (
+                    // крутилка запускается при загрузке
                     <ActivityIndicator style={{ marginTop: 10 }} size={'large'} color={user.main} />
                 );
             }
         } else {
             return (
+                // В случае если нет подключения к интернету
                 <Text style={{ color: user.main, fontFamily: 'Raleway-Medium', fontSize: 18, textAlign: 'center' }}>Нет подключения 😴</Text>
             );
         }

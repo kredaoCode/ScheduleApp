@@ -10,16 +10,20 @@ import GoToCertificates from './GoToCertificates';
 export default function Settings() {
     const {user, showSettings, setShowSettings} = useContext(Context)
     return (
-        <Modal 
+        <Modal
             style={styles.container}
             animationType="fade"
             visible={showSettings}
+            // приказывает закрыть модальное окно при активации события назад на интерфейсе устройства
             onRequestClose={() => {
                 setShowSettings(prev => !prev)
             }}
             >
             <View style={[styles.item, {backgroundColor: user.bg}]}>
+
+                {/* Отвечает за выбор группы | преподавателя */}
                 <ChangeFilter />
+                {/* Кнопочка с ссылкой на заказ справки об обучении а колледже */}
                 <GoToCertificates />
             </View>
         </Modal>

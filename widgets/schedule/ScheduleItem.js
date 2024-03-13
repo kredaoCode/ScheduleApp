@@ -1,17 +1,19 @@
-import { Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { StyleSheet, Text, View } from 'react-native'
 import { Ionicons, SimpleLineIcons } from '@expo/vector-icons';
 import React, { useContext } from 'react'
 import { Context } from '../../context';
 
-// элемент занятия
+// элемент с информацией о паре
 
-export default function ScheduleItem({ index, info }) {
+export default function ScheduleItem({ info }) {
     const { user } = useContext(Context);
 
     return (
         <View style={[styles.container, { backgroundColor: user.bgNight }]}>
+            {/* В случае деления подгруппы показывает две пары в одном элементе */}
             {info.map((item, index) =>
                     <View style={{ marginVertical: 5 }} key={`${item.name}_${index}`}>
+                        {/* Элемент с информацией о номере пары и её времени */}
                         <View style={styles.header}>
                                 {item.type == "Лекция" ?
                                     <Ionicons name="school" size={16} color={user.main + 'A4'} /> :
@@ -19,7 +21,9 @@ export default function ScheduleItem({ index, info }) {
                                 <Text style={[styles.typeText, { color: user.main + 'A4' }]}>{item.type}</Text>
                                 <Text style={{ color: user.main + 'A4', fontFamily: 'Raleway-Regular' }}>{item.time}</Text>
                         </View>
+                        {/* Текст с названием дисциплины */}
                         <Text style={[styles.nameText, { color: user.main }]}>{item.name}</Text>
+                        {/* контейнер с фамилией преподавателя или имя группы */}
                         <View style={[styles.teacherContainer, { backgroundColor: user.bgLight }]}>
                             <Text style={[styles.teacherText, { color: user.main }]}>{(item.teacher || item.group)}</Text>
                             {(item.location !== null) ?
@@ -30,7 +34,6 @@ export default function ScheduleItem({ index, info }) {
                         </View>
                     </View>
             )}
-
         </View>
     )
 }

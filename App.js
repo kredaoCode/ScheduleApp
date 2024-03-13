@@ -125,14 +125,19 @@ export default function App() {
                 isLoadSchedule
             }}
         >
-
+            {/* SafeAreaProvider это контейнер создающий безопасную зону для компонентов,
+                чтобы предотвратить скрытие компонентов системными элементами */}
             <SafeAreaProvider>
                 <SafeAreaView
                     style={[styles.container, { backgroundColor: user.bg }]}
                     edges={['bottom', 'top', 'left', 'right']}
                 >
                     {fetchedSchedule !== undefined && fetchedSchedule !== null ? <ScheduleList /> : <Indicator />}
+
+                    {/* Модальное окно настроек */}
                     <Settings />
+
+                    {/* StatusBar это компонент управляющий в данном случае стилем апаратной строки состояния  */}
                     <StatusBar style="light" />
                 </SafeAreaView>
             </SafeAreaProvider>
