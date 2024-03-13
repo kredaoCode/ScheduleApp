@@ -10,7 +10,7 @@ export default function Indicator() {
 
     function renderIndicator() {
         if (isConnected) {
-            if (!isLoadSchedule && fetchedSchedule !== undefined) {
+            if (!isLoadSchedule && fetchedSchedule === null) {
                 if (user.id === undefined) {
                     return (
                         <View style={{ alignItems: 'center' }}>
@@ -29,11 +29,12 @@ export default function Indicator() {
                         </View>
                     )
                 } else {
+                    console.log('нет расписания!!!')
                     return (
                         <View style={{ alignItems: 'center' }}>
                             <MaterialIcons name="not-interested" size={64} color={user.main + 'a4'} />
                             <Text style={[styles.text, { color: user.main + 'a4' }]}>
-                                Кажестся, расписание нет
+                                Кажется, расписание нет
                             </Text>
                             <TouchableOpacity style={[styles.button, { backgroundColor: user.main + 'a4' }]} onPress={() => {
                                 setShowSettings(true);

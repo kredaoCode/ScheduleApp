@@ -1,6 +1,6 @@
 import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, LogBox } from 'react-native';
 import { useState, useEffect, useMemo } from 'react';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
@@ -62,23 +62,25 @@ export default function App() {
                 }
             })
             .then(data => {
-                setIsLoadSchedule(false)
                 if (data !== null && isConnected) {
-                    const parsedSchedule = { ...data.schedule };
+                    const parsedSchedule = data.schedule;
 
-                    if (Object.keys(parsedSchedule).length > 0) {
+                    console.log(parsedSchedule)
+
+                    if (Object.keys(parsedSchedule).length !== 0) {
                         setFetchedSchedule(parsedSchedule);
-                        
                     } else {
                         setFetchedSchedule(null);
                     }
                     setIsRefreshing(false);
-                } else if (!isConnected || data == null) {
-                    setFetchedSchedule(null);
+                } else {
+                    setFetchedSchedule(undefined);
                 }
+                setIsLoadSchedule(false)
             })
             .catch(error => {
-                setFetchedSchedule(null);
+                setIsLoadSchedule(false)
+                setFetchedSchedule(undefined);
                 setIsRefreshing(false);
             });
     };

@@ -2,14 +2,14 @@
   "expo": {
     "name": "Расписание",
     "slug": "schedule",
-    "version": "0.9.2",
+    "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#1B1B1B"
+      "backgroundColor": "#161616"
     },
     "assetBundlePatterns": [
       "**/*"
@@ -25,7 +25,7 @@
       "userInterfaceStyle": "dark",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#1D1D1D"
+        "backgroundColor": "#161616"
       },
       "package": "com.kredao.schedule"
     },
