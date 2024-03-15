@@ -22,13 +22,13 @@ export default function App() {
         bgLight: '#232323',
         main: '#FFFFFF',
         // Параметры расписания
-        id: undefined,
+        id: null,
         type: 'group',
         name: 'ИСР-12',
     })
     const [isLoadSchedule, setIsLoadSchedule] = useState(true);
     const [showSettings, setShowSettings] = useState(false);
-    const [fetchedSchedule, setFetchedSchedule] = useState(undefined);
+    const [fetchedSchedule, setFetchedSchedule] = useState(null);
     const [isRefreshing, setIsRefreshing] = useState(false);
 
     // Функция рефреша
@@ -53,37 +53,37 @@ export default function App() {
     };
 
     const loadSchedule = () => {
-        setFetchedSchedule(undefined)
-        fetch(`https://schedule-backend-production.koka.team/v1/schedule?${user.type}_id=${user.id}&is_new=true`)
-            .then(response => {
-                if (response.ok) {
-                    return response.json();
-                } else {
-                    return null;
-                }
-            })
-            .then(data => {
-                if (data !== null && isConnected) {
-                    const parsedSchedule = data.schedule;
-
-                    console.log(parsedSchedule)
-
-                    if (Object.keys(parsedSchedule).length !== 0) {
-                        setFetchedSchedule(parsedSchedule);
+        if (user.type !== null && user.id !== null) {
+            setFetchedSchedule(null)
+            fetch(`https://schedule-backend-production.koka.team/v1/schedule?${user.type}_id=${user.id}&is_new=true`)
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
                     } else {
-                        setFetchedSchedule(undefined);
+                        return null;
                     }
+                })
+                .then(data => {
+                    if (data !== null && isConnected) {
+                        const parsedSchedule = data.schedule;
+
+                        if (Object.keys(parsedSchedule).length !== 0) {
+                            setFetchedSchedule(parsedSchedule);
+                        } else {
+                            setFetchedSchedule(null);
+                        }
+                        setIsRefreshing(false);
+                    } else {
+                        setFetchedSchedule(null);
+                    }
+                    setIsLoadSchedule(false)
+                })
+                .catch(error => {
+                    setIsLoadSchedule(false)
+                    setFetchedSchedule(null);
                     setIsRefreshing(false);
-                } else {
-                    setFetchedSchedule(undefined);
-                }
-                setIsLoadSchedule(false)
-            })
-            .catch(error => {
-                setIsLoadSchedule(false)
-                setFetchedSchedule(undefined);
-                setIsRefreshing(false);
-            });
+                });
+        }
     };
 
     useEffect(() => {
@@ -102,7 +102,9 @@ export default function App() {
             SplashScreen.hideAsync();
             loadSchedule();
         }
-        saveData();
+        if (user.id !== null && fetchedSchedule !== null) {
+            saveData();
+        }
     }, [user])
 
     useMemo(() => {
@@ -131,7 +133,7 @@ export default function App() {
                     style={[styles.container, { backgroundColor: user.bg }]}
                     edges={['bottom', 'top', 'left', 'right']}
                 >
-                    {fetchedSchedule !== undefined ? <ScheduleList /> : <Indicator />}
+                    {fetchedSchedule !== null ? <ScheduleList /> : <Indicator />}
 
                     {/* Модальное окно настроек */}
                     <Settings />

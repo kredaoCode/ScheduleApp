@@ -10,10 +10,10 @@ export default function Indicator() {
 
     function renderIndicator() {
         if (isConnected) {
-            if (!isLoadSchedule && fetchedSchedule === undefined) {
+            if (!isLoadSchedule && fetchedSchedule === null) {
 
                 // Проверка на то что приложение осуществило первый запуск
-                if (user.id === undefined) {
+                if (user.id === null) {
                     return (
                         <View style={{ alignItems: 'center' }}>
                             <MaterialIcons name="check" size={64} color={user.main + 'a4'} />
