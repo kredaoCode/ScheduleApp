@@ -10,7 +10,7 @@ export default function Indicator() {
 
     function renderIndicator() {
         if (isConnected) {
-            if (!isLoadSchedule && fetchedSchedule == null) {
+            if (!isLoadSchedule && fetchedSchedule === undefined) {
 
                 // Проверка на то что приложение осуществило первый запуск
                 if (user.id === undefined) {

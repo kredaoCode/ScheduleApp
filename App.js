@@ -33,6 +33,7 @@ export default function App() {
 
     // Функция рефреша
     const onRefresh = () => {
+        setIsLoadSchedule(true);
         setIsRefreshing(true);
         loadSchedule();
     };
@@ -70,7 +71,7 @@ export default function App() {
                     if (Object.keys(parsedSchedule).length !== 0) {
                         setFetchedSchedule(parsedSchedule);
                     } else {
-                        setFetchedSchedule(null);
+                        setFetchedSchedule(undefined);
                     }
                     setIsRefreshing(false);
                 } else {
@@ -101,9 +102,7 @@ export default function App() {
             SplashScreen.hideAsync();
             loadSchedule();
         }
-        if (typeof fetchedSchedule == "object") {
-            saveData();
-        }
+        saveData();
     }, [user])
 
     useMemo(() => {
@@ -132,7 +131,7 @@ export default function App() {
                     style={[styles.container, { backgroundColor: user.bg }]}
                     edges={['bottom', 'top', 'left', 'right']}
                 >
-                    {fetchedSchedule !== undefined && fetchedSchedule !== null ? <ScheduleList /> : <Indicator />}
+                    {fetchedSchedule !== undefined ? <ScheduleList /> : <Indicator />}
 
                     {/* Модальное окно настроек */}
                     <Settings />

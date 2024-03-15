@@ -1,12 +1,11 @@
 import React, { useContext, useState } from 'react';
-import { Modal, TouchableOpacity, StyleSheet, Text, View, TouchableWithoutFeedback } from 'react-native';
-import Animated, { useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
+import { Modal, TouchableOpacity, StyleSheet, View } from 'react-native';
+import {useSharedValue } from 'react-native-reanimated';
 import { MaterialIcons } from '@expo/vector-icons';
 
 import ColorPicker, {
     HueSlider,
-    SaturationSlider,
-    BrightnessSlider,
+    SaturationSlider
 } from 'reanimated-color-picker';
 import { Context } from '../../context';
 
