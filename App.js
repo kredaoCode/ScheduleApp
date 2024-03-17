@@ -48,9 +48,9 @@ export default function App() {
     // функция загрузки данных пользователя, вызывается один раз в начале жизненого цикла
     const getData = async () => {
         const storedUser = await AsyncStorage.getItem('user');
+        setIsLoadedUser(true);
         if (storedUser !== null) {
             setUser(JSON.parse(storedUser));
-            setIsLoadedUser(true);
         }
     };
 
