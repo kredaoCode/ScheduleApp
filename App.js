@@ -27,11 +27,11 @@ export default function App() {
         name: 'ИСР-12',
     })
     const [isLoadSchedule, setIsLoadSchedule] = useState(true);
-    // Индикатор загрузки данных пользователя
-    const [isLoadedUser, setIsLoadedUser] = useState(false);
     const [showSettings, setShowSettings] = useState(false);
     const [fetchedSchedule, setFetchedSchedule] = useState(null);
     const [isRefreshing, setIsRefreshing] = useState(false);
+
+    const [userDataLoaded, setUserDataLoaded] = useState(false);
 
     // Функция рефреша
     const onRefresh = () => {
@@ -43,18 +43,20 @@ export default function App() {
     // функция сохранение данных пользователья, вызывается при каждом изменении состояния user
     const saveData = async () => {
         await AsyncStorage.setItem('user', JSON.stringify(user));
+        console.log('save')
     };
 
     // функция загрузки данных пользователя, вызывается один раз в начале жизненого цикла
     const getData = async () => {
         const storedUser = await AsyncStorage.getItem('user');
-        setIsLoadedUser(true);
         if (storedUser !== null) {
+            console.log('get', storedUser)
             setUser(JSON.parse(storedUser));
         }
     };
 
     const loadSchedule = () => {
+        console.log(user)
         if (user.id !== null) {
             setFetchedSchedule(null)
             fetch(`https://schedule-backend-production.koka.team/v1/schedule?${user.type}_id=${user.id}&is_new=true`)
@@ -66,10 +68,11 @@ export default function App() {
                     }
                 })
                 .then(data => {
-                    if (data !== null && isConnected) {
+                    if (data !== null) {
                         const parsedSchedule = data.schedule;
+                        console.log('parsed schedule', parsedSchedule)
 
-                        if (Object.keys(parsedSchedule).length !== 0) {
+                        if (Object.keys(parsedSchedule).length != 0) {
                             setFetchedSchedule(parsedSchedule);
                         } else {
                             setFetchedSchedule(null);
@@ -101,19 +104,24 @@ export default function App() {
         };
     }, []);
 
-    useMemo(() => {
-        if (isConnected && isLoadSchedule && isLoadedUser) {
+    useEffect(() => {
+        getData().then(() => {
+            setUserDataLoaded(true);
+        });
+    }, []);
+    
+    useEffect(() => {
+        if (userDataLoaded && isConnected && isLoadSchedule) {
             SplashScreen.hideAsync();
             loadSchedule();
         }
-        if (user.id !== null && fetchedSchedule !== null) {
-            saveData();
-        }
-    }, [user, isLoadedUser])
+    }, [userDataLoaded, isConnected, isLoadSchedule]);
 
-    useMemo(() => {
-        getData();
-    }, []);
+    useEffect(() => {
+        if(user.id !== null) {
+            saveData()
+        }
+    }, [user])
 
     return (
         <Context.Provider
