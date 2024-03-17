@@ -35,7 +35,7 @@ export default function Indicator() {
                         <View style={{ alignItems: 'center' }}>
                             <MaterialIcons name="not-interested" size={64} color={user.main + 'a4'} />
                             <Text style={[styles.text, { color: user.main + 'a4' }]}>
-                                Кажется, расписание нет
+                                Кажется, расписания нет
                             </Text>
                             <TouchableOpacity style={[styles.button, { backgroundColor: user.main + 'a4' }]} onPress={() => {
                                 setShowSettings(true);

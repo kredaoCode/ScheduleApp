@@ -27,6 +27,8 @@ export default function App() {
         name: 'ИСР-12',
     })
     const [isLoadSchedule, setIsLoadSchedule] = useState(true);
+    // Индикатор загрузки данных пользователя
+    const [isLoadedUser, setIsLoadedUser] = useState(false);
     const [showSettings, setShowSettings] = useState(false);
     const [fetchedSchedule, setFetchedSchedule] = useState(null);
     const [isRefreshing, setIsRefreshing] = useState(false);
@@ -46,14 +48,14 @@ export default function App() {
     // функция загрузки данных пользователя, вызывается один раз в начале жизненого цикла
     const getData = async () => {
         const storedUser = await AsyncStorage.getItem('user');
-
         if (storedUser !== null) {
             setUser(JSON.parse(storedUser));
+            setIsLoadedUser(true);
         }
     };
 
     const loadSchedule = () => {
-        if (user.type !== null && user.id !== null) {
+        if (user.id !== null) {
             setFetchedSchedule(null)
             fetch(`https://schedule-backend-production.koka.team/v1/schedule?${user.type}_id=${user.id}&is_new=true`)
                 .then(response => {
@@ -72,17 +74,19 @@ export default function App() {
                         } else {
                             setFetchedSchedule(null);
                         }
-                        setIsRefreshing(false);
                     } else {
                         setFetchedSchedule(null);
                     }
                     setIsLoadSchedule(false)
+                    setIsRefreshing(false);
                 })
                 .catch(error => {
                     setIsLoadSchedule(false)
                     setFetchedSchedule(null);
                     setIsRefreshing(false);
                 });
+        } else {
+            setIsLoadSchedule(false)
         }
     };
 
@@ -98,14 +102,14 @@ export default function App() {
     }, []);
 
     useMemo(() => {
-        if (!showSettings && isConnected && isLoadSchedule) {
+        if (isConnected && isLoadSchedule && isLoadedUser) {
             SplashScreen.hideAsync();
             loadSchedule();
         }
         if (user.id !== null && fetchedSchedule !== null) {
             saveData();
         }
-    }, [user])
+    }, [user, isLoadedUser])
 
     useMemo(() => {
         getData();
