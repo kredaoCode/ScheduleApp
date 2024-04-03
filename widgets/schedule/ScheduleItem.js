@@ -24,7 +24,7 @@ export default function ScheduleItem({ info }) {
                         {/* Текст с названием дисциплины */}
                         <Text style={[styles.nameText, { color: user.main }]}>{item.name}</Text>
                         {/* контейнер с фамилией преподавателя или имя группы */}
-                        <View style={[styles.teacherContainer, { backgroundColor: user.bgLight }]}>
+                        <View style={styles.teacherContainer}>
                             <Text style={[styles.teacherText, { color: user.main }]}>{(item.teacher || item.group)}</Text>
                             {(item.location !== null) ?
                                 <View style={styles.locationContainer}>
@@ -54,7 +54,6 @@ const styles = StyleSheet.create({
         borderRadius: 15,
         alignItems: 'center',
         justifyContent: 'space-between',
-        elevation: 5,
     },
     locationContainer: {
         paddingVertical: 3,

@@ -43,15 +43,13 @@ export default function App() {
     // функция сохранение данных пользователья, вызывается при каждом изменении состояния user
     const saveData = async () => {
         await AsyncStorage.setItem('user', JSON.stringify(user));
-        console.log('save')
     };
 
     // функция загрузки данных пользователя, вызывается один раз в начале жизненого цикла
     const getData = async () => {
         const storedUser = await AsyncStorage.getItem('user');
         if (storedUser !== null) {
-            console.log('get', storedUser)
-            setUser(JSON.parse(storedUser));
+            //setUser(JSON.parse(storedUser));
         }
     };
 
